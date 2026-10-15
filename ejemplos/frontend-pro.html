@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Aurea — Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="demo.css" />
+    <style>
+      :root { --bg:#0c0c0b; --fg:#f2ebe3; --mute:#9a9188; --line:#2a2724; --acc:#c45c26; }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin:0; background:var(--bg); color:var(--fg); font-family:Outfit,sans-serif; overflow-x:hidden; }
+      .demo { font-size:12px; padding:8px 18px; display:flex; justify-content:space-between; background:#161513; border-bottom:1px solid var(--line); }
+      .demo a { color:var(--acc); }
+      nav { position:fixed; inset:36px 0 auto; display:flex; justify-content:space-between; padding:0 28px; z-index:5; mix-blend-mode:difference; }
+      nav a { color:var(--fg); text-decoration:none; font-size:13px; letter-spacing:.12em; text-transform:uppercase; }
+      .hero { min-height:100vh; display:grid; place-items:end start; padding:12vh 28px 10vh; }
+      .hero p { color:var(--mute); letter-spacing:.2em; text-transform:uppercase; font-size:12px; margin:0 0 18px; }
+      h1 { font-family:"Instrument Serif",serif; font-weight:400; font-size:clamp(3.2rem,12vw,9rem); line-height:.9; margin:0; max-width:12ch; }
+      h1 em { font-style:italic; color:var(--acc); }
+      .reveal { opacity:0; transform:translateY(28px); animation:up 1s .15s forwards; }
+      @keyframes up { to { opacity:1; transform:none; } }
+      .marquee { border-block:1px solid var(--line); overflow:hidden; white-space:nowrap; padding:14px 0; color:var(--mute); }
+      .marquee span { display:inline-block; animation:slide 28s linear infinite; }
+      @keyframes slide { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+      section { padding:88px 28px; width:min(1120px,100%); margin:auto; }
+      h2 { font-family:"Instrument Serif",serif; font-size:clamp(2rem,5vw,3.4rem); font-weight:400; margin:0 0 28px; }
+      .work { display:grid; gap:18px; }
+      @media (min-width:800px) { .work { grid-template-columns:1.2fr .8fr; } }
+      .tile { position:relative; min-height:280px; border-radius:4px; overflow:hidden; background:#1a1816; isolation:isolate; }
+      .tile:hover .cover { transform:scale(1.06); }
+      .cover { position:absolute; inset:0; background:linear-gradient(160deg,#2b211c,#111); transition:transform 1.1s ease; }
+      .tile.b .cover { background:linear-gradient(160deg,#1c242b,#111); }
+      .tile.c { min-height:220px; }
+      .tile span { position:absolute; left:18px; bottom:16px; font-size:14px; }
+      .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; border-top:1px solid var(--line); padding-top:40px; }
+      .stats b { display:block; font-family:"Instrument Serif",serif; font-size:2.4rem; font-weight:400; }
+      .stats span { color:var(--mute); font-size:13px; }
+      .cta { display:flex; flex-wrap:wrap; justify-content:space-between; gap:24px; align-items:end; padding-bottom:100px; }
+      .btn { display:inline-flex; border:1px solid var(--fg); color:var(--fg); text-decoration:none; padding:12px 22px; border-radius:999px; transition:background .3s,color .3s; }
+      .btn:hover { background:var(--fg); color:var(--bg); }
+      footer { padding:28px; color:var(--mute); font-size:13px; border-top:1px solid var(--line); }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal, .marquee span, .cover { animation:none; transform:none; opacity:1; transition:none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo">
+      <span>Ejemplo · Frontend animado · 3.200 Bs (USD 290)</span>
+      <a href="../index.html">Volver al catálogo</a>
+    </div>
+    <nav>
+      <a href="#trabajo">Trabajo</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <header class="hero">
+      <div>
+        <p class="reveal">Santa Cruz · estudio digital</p>
+        <h1 class="reveal">Diseño que se <em>siente</em> caro.</h1>
+      </div>
+    </header>
+    <div class="marquee" aria-hidden="true">
+      <span>Identidad &nbsp;·&nbsp; Web motion &nbsp;·&nbsp; Producto &nbsp;·&nbsp; Lanzamientos &nbsp;·&nbsp; Identidad &nbsp;·&nbsp; Web motion &nbsp;·&nbsp; Producto &nbsp;·&nbsp; Lanzamientos &nbsp;·&nbsp;</span>
+    </div>
+    <section id="trabajo">
+      <h2>Casos</h2>
+      <div class="work">
+        <article class="tile"><div class="cover"></div><span>Hilandería — sitio de taller</span></article>
+        <div>
+          <article class="tile b c"><div class="cover"></div><span>Norte CRM — panel</span></article>
+          <p style="color:var(--mute);margin:18px 0 0;max-width:36ch">Interfaces lentas a propósito: tipo grande, poco ruido, hover que responde. Hecho para marcas que venden confianza, no descuentos.</p>
+        </div>
+      </div>
+      <div class="stats" style="margin-top:48px">
+        <div><b data-count="12">0</b><span>lanzamientos</span></div>
+        <div><b>3.2s</b><span>primera pintura</span></div>
+        <div><b>ES/EN</b><span>cuando el cliente es remoto</span></div>
+      </div>
+    </section>
+    <section class="cta" id="contacto">
+      <h2>Un home que no parece plantilla.</h2>
+      <a class="btn" href="mailto:diegoarmandosarmientoosinaga@gmail.com">Pedir este pack</a>
+    </section>
+    <footer>Aurea es un ejemplo de producto. Pack Frontend senior en el catálogo.</footer>
+    <script>
+      const el = document.querySelector("[data-count]")
+      const target = 12
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      if (reduce) el.textContent = String(target)
+      else {
+        let n = 0
+        const tick = () => {
+          n += 1
+          el.textContent = String(n)
+          if (n < target) requestAnimationFrame(tick)
+        }
+        const io = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) { tick(); io.disconnect() }
+        })
+        io.observe(el)
+      }
+    </script>
+    <script src="embed.js"></script>
+  </body>
+</html>

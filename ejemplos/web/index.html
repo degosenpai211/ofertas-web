@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Estudio Vargas — Web de negocio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="../demo.css" />
+    <link rel="stylesheet" href="../extras-panel.css" />
+    <link rel="stylesheet" href="web.css" />
+    <link rel="preload" as="image" href="img/hero.webp" />
+  </head>
+  <body>
+    <div class="demo"><span>Ejemplo · Web común · <span data-pack-price>3.500 Bs</span> · activa los extras y mira el cambio</span><a href="../../index.html" target="_top">Volver al catálogo</a></div>
+
+    <div class="page" id="page">
+      <div class="editbar" data-extra="textPanel" hidden>
+        <span><strong data-en="Text panel">Panel de textos</strong> · <span data-en="click any outlined text and type">haz clic en un texto marcado y escribe</span></span>
+        <button type="button" id="edit-save" data-en="Save changes">Guardar cambios</button>
+      </div>
+
+      <header class="nav">
+        <a class="brand" href="#inicio" data-goto="inicio"><span class="brand-mark">EV</span>Estudio Vargas</a>
+        <nav class="nav-links" aria-label="Secciones">
+          <a href="#servicios" data-goto="servicios" data-en="Services">Servicios</a>
+          <a href="#nosotros" data-goto="nosotros" data-en="About">Nosotros</a>
+          <a href="#planes" data-goto="planes" data-extra="extraPage" data-en="Plans" hidden>Planes</a>
+          <a href="#blog" data-goto="blog" data-extra="staticBlog" hidden>Blog</a>
+          <a href="#contacto" data-goto="contacto" data-en="Contact">Contacto</a>
+        </nav>
+        <div class="nav-tools">
+          <div class="lang" data-extra="secondLanguage" role="group" aria-label="Idioma" hidden>
+            <button type="button" data-lang="es" aria-pressed="true">ES</button>
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+          <button class="theme-btn" id="theme-btn" type="button" data-extra="themeToggle" aria-label="Cambiar tema" hidden>
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z" /></svg>
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+          </button>
+          <button class="btn btn-small" type="button" data-goto="contacto" data-en="Book a call">Agendar llamada</button>
+        </div>
+      </header>
+
+      <section class="hero" id="inicio">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="eyebrow" data-intro data-en="Accounting and taxes · Santa Cruz">Contabilidad e impuestos · Santa Cruz</p>
+          <h1 data-intro data-editable data-en="Clear taxes and statements, without the jargon.">Impuestos y estados claros, sin jerga.</h1>
+          <p class="lead" data-intro data-editable data-en="We keep the books for small businesses and independent professionals, so every month you know what you earned and what you owe.">Llevamos la contabilidad de pymes y profesionales independientes para que cada mes sepas cuánto ganaste y qué debes.</p>
+          <div class="hero-actions" data-intro>
+            <button class="btn" type="button" data-goto="contacto" data-en="Book a call">Agendar una llamada</button>
+            <button class="btn btn-ghost" type="button" data-goto="servicios" data-en="See services">Ver servicios</button>
+          </div>
+          <ul class="trust" data-intro>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span data-en="Reply within 24 hours">Respuesta en 24 horas</span></li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span data-en="Fixed monthly fee">Cuota mensual fija</span></li>
+          </ul>
+        </div>
+        <div class="hero-media" data-intro>
+          <img class="hero-img" src="img/hero.webp" alt="" width="960" height="1080" fetchpriority="high" />
+          <div class="chip chip-top">
+            <span class="chip-dot"></span>
+            <div><strong data-en="VAT return">Declaración de IVA</strong><span data-en="Filed on time">Presentada a tiempo</span></div>
+          </div>
+          <div class="chip chip-bottom">
+            <div><strong data-en="Monthly close">Cierre mensual</strong><span data-en="Ready in 5 days">Listo en 5 días</span></div>
+            <svg width="64" height="28" viewBox="0 0 64 28" fill="none" aria-hidden="true"><path d="M2 24c8-2 10-12 18-12s8 6 16 4S50 4 62 3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" /></svg>
+          </div>
+        </div>
+      </section>
+
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+          <span>Restaurantes</span><span>Talleres</span><span>Clínicas</span><span>Comercios</span><span>Constructoras</span><span>Profesionales independientes</span>
+          <span>Restaurantes</span><span>Talleres</span><span>Clínicas</span><span>Comercios</span><span>Constructoras</span><span>Profesionales independientes</span>
+        </div>
+      </div>
+
+      <section class="section" id="servicios">
+        <div class="section-head reveal">
+          <p class="eyebrow" data-en="Services">Servicios</p>
+          <h2 data-editable data-en="Everything your business has to report, handled.">Todo lo que tu negocio tiene que presentar, resuelto.</h2>
+        </div>
+        <div class="services">
+          <article class="service reveal">
+            <span class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15v-4M12 15V8M16 15v-6" /></svg></span>
+            <h3 data-en="Monthly bookkeeping">Contabilidad mensual</h3>
+            <p data-en="Books up to date and a results report you can read in five minutes.">Libros al día y un informe de resultados que se lee en cinco minutos.</p>
+          </article>
+          <article class="service reveal">
+            <span class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h8l4 4v14H7zM15 3v4h4M10 12h6M10 16h6" /></svg></span>
+            <h3 data-en="Taxes and returns">Impuestos y declaraciones</h3>
+            <p data-en="VAT, transaction tax and corporate income tax filed on time, with no fines.">IVA, IT e IUE presentados a tiempo y sin multas.</p>
+          </article>
+          <article class="service reveal">
+            <span class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 5.2a3.5 3.5 0 0 1 0 5.6M18.5 14.8c1.7.8 2.7 2.5 3 5.2" /></svg></span>
+            <h3 data-en="Payroll and contributions">Planillas y aportes</h3>
+            <p data-en="Salaries, pension and health contributions calculated and filed every month.">Sueldos, AFP y caja de salud calculados y presentados cada mes.</p>
+          </article>
+          <article class="service reveal">
+            <span class="service-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V9l8-6 8 6v12M9 21v-7h6v7" /></svg></span>
+            <h3 data-en="Company setup">Constitución de empresas</h3>
+            <p data-en="Tax ID, business registry and municipal licence, start to finish.">NIT, registro de comercio y licencia municipal, de principio a fin.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section about" id="nosotros">
+        <div class="about-media reveal">
+          <img src="img/about.webp" alt="" width="960" height="760" loading="lazy" decoding="async" />
+        </div>
+        <div class="about-copy reveal">
+          <p class="eyebrow" data-en="About us">Nosotros</p>
+          <h2 data-editable data-en="A small firm that answers the phone.">Un estudio chico que contesta el teléfono.</h2>
+          <p class="lead" data-editable data-en="We are four accountants in Santa Cruz. Each client has one person in charge, and that person knows the business by name.">Somos cuatro contadores en Santa Cruz. Cada cliente tiene una persona a cargo, y esa persona conoce el negocio por su nombre.</p>
+          <ul class="checks">
+            <li data-en="One accountant assigned to your business">Un contador asignado a tu negocio</li>
+            <li data-en="Monthly report in plain language">Informe mensual en lenguaje simple</li>
+            <li data-en="Filing calendar shared with you">Calendario de vencimientos compartido</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="stat reveal"><strong><span data-count="120">120</span>+</strong><span data-en="businesses served">empresas atendidas</span></div>
+        <div class="stat reveal"><strong><span data-count="14">14</span></strong><span data-en="years of practice">años de trabajo</span></div>
+        <div class="stat reveal"><strong><span data-count="98">98</span>%</strong><span data-en="returns filed on time">declaraciones a tiempo</span></div>
+        <div class="stat reveal"><strong><span data-count="24">24</span> h</strong><span data-en="to get a reply">para responderte</span></div>
+      </section>
+
+      <section class="section" id="casos" data-extra="workCarousel" hidden>
+        <div class="section-head reveal">
+          <p class="eyebrow" data-en="Client work">Trabajos</p>
+          <h2 data-en="What changed for our clients">Qué cambió para nuestros clientes</h2>
+        </div>
+        <div class="swiper cases" id="cases">
+          <div class="swiper-wrapper">
+            <article class="swiper-slide case"><span class="case-tag" data-en="Restaurant">Restaurante</span><h3 data-en="From fines every quarter to none in two years">De multas cada trimestre a ninguna en dos años</h3><p data-en="We organised invoices by week and set reminders before each due date.">Ordenamos las facturas por semana y pusimos avisos antes de cada vencimiento.</p></article>
+            <article class="swiper-slide case"><span class="case-tag" data-en="Car workshop">Taller mecánico</span><h3 data-en="The owner finally sees his monthly margin">El dueño por fin ve su margen de cada mes</h3><p data-en="One page with income, costs and what is left, delivered on the 5th.">Una hoja con ingresos, costos y lo que queda, entregada el día 5.</p></article>
+            <article class="swiper-slide case"><span class="case-tag" data-en="Dental clinic">Clínica dental</span><h3 data-en="Payroll for 9 people without overtime at month end">Planilla de 9 personas sin horas extra a fin de mes</h3><p data-en="We moved payroll to a template the clinic fills in ten minutes.">Pasamos la planilla a una plantilla que la clínica llena en diez minutos.</p></article>
+            <article class="swiper-slide case"><span class="case-tag" data-en="Hardware store">Ferretería</span><h3 data-en="A company set up and invoicing in three weeks">Empresa constituida y facturando en tres semanas</h3><p data-en="Tax ID, registry and licence handled in parallel.">NIT, registro y licencia tramitados en paralelo.</p></article>
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+        <p class="fine" data-en="Sample cases for the demo.">Casos de muestra para la demo.</p>
+      </section>
+
+      <section class="section section-soft" id="planes" data-extra="extraPage" hidden>
+        <div class="section-head reveal">
+          <p class="eyebrow" data-en="Extra page">Página extra</p>
+          <h2 data-en="Monthly plans">Planes mensuales</h2>
+        </div>
+        <div class="plans">
+          <article class="plan reveal"><h3 data-en="Independent">Independiente</h3><p class="plan-price">350 Bs<span data-en="/month">/mes</span></p><ul><li data-en="Monthly returns">Declaraciones mensuales</li><li data-en="Invoice review">Revisión de facturas</li><li data-en="WhatsApp support">Consultas por WhatsApp</li></ul></article>
+          <article class="plan plan-featured reveal"><span class="plan-tag" data-en="Most chosen">El más elegido</span><h3 data-en="Small business">Pyme</h3><p class="plan-price">900 Bs<span data-en="/month">/mes</span></p><ul><li data-en="Full bookkeeping">Contabilidad completa</li><li data-en="Payroll up to 10 people">Planilla hasta 10 personas</li><li data-en="Monthly results report">Informe mensual de resultados</li></ul></article>
+          <article class="plan reveal"><h3 data-en="Company">Empresa</h3><p class="plan-price" data-en="Custom">A medida</p><ul><li data-en="Everything in Small business">Todo lo del plan Pyme</li><li data-en="Annual financial statements">Estados financieros anuales</li><li data-en="Quarterly meeting">Reunión trimestral</li></ul></article>
+        </div>
+      </section>
+
+      <section class="section" id="blog" data-extra="staticBlog" hidden>
+        <div class="section-head reveal">
+          <p class="eyebrow">Blog</p>
+          <h2 data-en="Notes to understand your numbers">Notas para entender tus números</h2>
+        </div>
+        <div class="posts" id="posts"></div>
+      </section>
+
+      <section class="section contact" id="contacto">
+        <div class="contact-copy reveal">
+          <p class="eyebrow" data-en="Contact">Contacto</p>
+          <h2 data-editable data-en="Tell us about your business.">Cuéntanos de tu negocio.</h2>
+          <p class="lead" data-en="We reply within 24 hours with a proposal and a fixed monthly fee.">Te respondemos en 24 horas con una propuesta y una cuota mensual fija.</p>
+          <ul class="contact-data">
+            <li><strong data-en="Office">Oficina</strong><span>Av. San Martín 455, Equipetrol</span></li>
+            <li><strong data-en="Hours">Horario</strong><span data-en="Monday to Friday, 8:30 to 18:00">Lunes a viernes, 8:30 a 18:00</span></li>
+            <li><strong>WhatsApp</strong><button class="link" id="whatsapp" type="button" data-en="Message us">Escríbenos</button></li>
+          </ul>
+          <div class="map" data-extra="mapDirections" hidden>
+            <iframe id="map-frame" title="Mapa de Estudio Vargas" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <button class="btn btn-ghost btn-small" id="directions" type="button" data-en="Get directions">Cómo llegar</button>
+          </div>
+        </div>
+        <form class="form reveal" id="contact-form" novalidate>
+          <label><span data-en="Name">Nombre</span><input name="name" type="text" autocomplete="name" required /></label>
+          <label><span data-en="Email or WhatsApp">Email o WhatsApp</span><input name="contact" type="text" required /></label>
+          <label><span data-en="Type of business">Tipo de negocio</span>
+            <select name="kind">
+              <option data-en="Shop or restaurant">Comercio o restaurante</option>
+              <option data-en="Services">Servicios</option>
+              <option data-en="Independent professional">Profesional independiente</option>
+              <option data-en="Other">Otro</option>
+            </select>
+          </label>
+          <label><span data-en="What do you need?">¿Qué necesitas?</span><textarea name="message" rows="3"></textarea></label>
+          <p class="form-error" id="form-error" role="alert" hidden data-en="Name and a way to reach you are required.">Faltan el nombre y un medio de contacto.</p>
+          <button class="btn" type="submit" data-en="Send message">Enviar mensaje</button>
+        </form>
+      </section>
+
+      <footer class="foot">
+        <span class="brand"><span class="brand-mark">EV</span>Estudio Vargas</span>
+        <span data-en="Accounting and taxes · Demo site">Contabilidad e impuestos · Sitio de muestra</span>
+        <span>© Estudio Vargas</span>
+      </footer>
+
+      <div class="wa-float" data-extra="floatingWhatsapp" hidden>
+        <button type="button" id="wa-float" aria-label="WhatsApp">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.9A8.5 8.5 0 1 1 21 11.5z" /><path d="M9 10.5c0 2.2 2.3 4.5 4.5 4.5" /></svg>
+        </button>
+      </div>
+    </div>
+
+    <dialog class="reader" id="reader">
+      <button class="reader-close" id="reader-close" type="button" aria-label="Cerrar">×</button>
+      <article id="reader-body"></article>
+    </dialog>
+
+    <script src="../embed.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js" defer></script>
+    <script type="module" src="web.js"></script>
+  </body>
+</html>

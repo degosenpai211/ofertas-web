@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Café Barrio — Landing de 1 sección</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="extras-panel.css" />
+    <link rel="stylesheet" href="landing-1.css" />
+  </head>
+  <body>
+    <div class="demo"><span>Ejemplo · Landing 1 sección · <span data-pack-price>720 Bs</span> · activa los extras y mira el cambio</span><a href="../index.html" target="_top">Volver al catálogo</a></div>
+
+    <div class="page" id="page">
+      <section class="hero">
+        <header class="topbar rise" style="--i: 0">
+          <span class="wordmark">Café Barrio</span>
+          <span class="hours" data-extra="openingHours" hidden><i class="dot" id="hours-dot"></i><span><span id="hours-text"></span><span class="hours-detail" id="hours-detail"></span></span></span>
+        </header>
+
+        <div class="hero-body">
+          <p class="eyebrow rise" style="--i: 1" data-copy data-basic="Equipetrol · Santa Cruz" data-pro="Tostado cada semana en Santa Cruz">Equipetrol · Santa Cruz</p>
+          <h1 class="rise" style="--i: 2" data-copy data-basic="Café de especialidad y pan del día." data-pro="El café de la mañana, sin apuro.">Café de especialidad y pan del día.</h1>
+          <p class="lead rise" style="--i: 3" data-copy data-basic="Tenemos café, pan y mesas en la vereda. Escríbenos para reservar." data-pro="Granos de Caranavi tostados cada semana y pan que sale del horno a las 7. Reserva tu mesa por WhatsApp y te confirmamos en minutos.">Tenemos café, pan y mesas en la vereda. Escríbenos para reservar.</p>
+          <div class="actions rise" style="--i: 4">
+            <button class="cta" id="cta" type="button">Reservar mesa por WhatsApp</button>
+            <button class="cta cta-ghost" id="call" type="button" data-extra="callButton" hidden>Llamar al local</button>
+          </div>
+        </div>
+
+        <footer class="contact rise" style="--i: 5">
+          <span>Calle 24 de Septiembre 310, Equipetrol</span>
+          <span class="social"><a href="#" data-fake>Instagram</a><a href="#" data-fake>Facebook</a></span>
+        </footer>
+      </section>
+
+      <section class="menu" data-extra="extraSectionFromSecond" hidden>
+        <p class="menu-eyebrow">Sección extra</p>
+        <h2>La carta de hoy</h2>
+        <ul class="menu-list">
+          <li><div><strong>Capuchino</strong><span>Doble shot, leche texturizada</span></div><b>18 Bs</b></li>
+          <li><div><strong>Pan de masa madre</strong><span>Media hogaza, horneado a las 7</span></div><b>12 Bs</b></li>
+          <li><div><strong>Cuñapé recién hecho</strong><span>Porción de cuatro, sale cada hora</span></div><b>8 Bs</b></li>
+        </ul>
+      </section>
+
+      <section class="map" data-extra="googleMap" hidden>
+        <div class="map-copy">
+          <h2>Estamos en Equipetrol</h2>
+          <p>Calle 24 de Septiembre 310, a media cuadra de la plazuela.</p>
+        </div>
+        <iframe id="map-frame" title="Mapa de Café Barrio" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </section>
+    </div>
+
+    <script src="embed.js"></script>
+    <script type="module" src="landing-1.js"></script>
+  </body>
+</html>

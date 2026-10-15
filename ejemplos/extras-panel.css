@@ -1,0 +1,334 @@
+/* Panel de extras compartido por las demos (lo arma extras-panel.js).
+   La página de cada demo vive dentro de .stage y se adapta al ancho de .stage con
+   container queries, no al de la ventana: así la vista "Celular" muestra el diseño
+   móvil real dentro del marco. Cada demo define --stage-bg y sus propios estilos. */
+
+:root {
+  --panel-ink: #1c1a17;
+  --panel-muted: #6b6358;
+  --panel-line: #e2dacb;
+  --panel-surface: #fffdf8;
+  --panel-soft: #f5f1ea;
+  --panel-accent: #b7410e;
+  --panel-width: 360px;
+  --panel-display: Fraunces, ui-serif, Georgia, serif;
+  --panel-body: Outfit, ui-sans-serif, system-ui, sans-serif;
+  --backdrop: #120d09;
+  --stage-bg: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  background: var(--backdrop);
+  font-family: var(--panel-body);
+}
+
+html.in-iframe body { grid-template-rows: minmax(0, 1fr); }
+
+[hidden] { display: none !important; }
+
+button { font: inherit; cursor: pointer; }
+
+/* Área de trabajo: vista previa + panel ------------------------------------ */
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+}
+
+.viewport {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.stage {
+  container: stage / size;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--stage-bg);
+  scroll-behavior: smooth;
+}
+
+.viewport.is-phone {
+  background:
+    radial-gradient(600px 400px at 50% 0%, rgb(255 255 255 / 0.08), transparent),
+    var(--backdrop);
+}
+
+.viewport.is-phone .stage {
+  width: 390px;
+  height: min(100% - 40px, 780px);
+  border: 10px solid #050403;
+  border-radius: 40px;
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.08);
+  scrollbar-width: none;
+}
+
+.viewport.is-phone .stage::-webkit-scrollbar { display: none; }
+
+/* Resaltado de la parte que acaba de cambiar */
+.flash { animation: flash 1400ms ease-out; }
+
+@keyframes flash {
+  0%, 60% { box-shadow: 0 0 0 3px var(--panel-accent), 0 0 0 9px rgb(183 65 14 / 0.25); }
+  100% { box-shadow: 0 0 0 3px transparent, 0 0 0 9px transparent; }
+}
+
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  z-index: 5;
+  width: max-content;
+  max-width: min(90%, 420px);
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--panel-surface);
+  color: var(--panel-ink);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.35);
+  font-size: 0.92rem;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+/* Panel ---------------------------------------------------------------------- */
+.panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  max-height: 58dvh;
+  border-top: 1px solid var(--panel-line);
+  border-radius: 20px 20px 0 0;
+  background: var(--panel-surface);
+  color: var(--panel-ink);
+  box-shadow: 0 -18px 50px rgb(0 0 0 / 0.35);
+}
+
+.panel :focus-visible,
+.fab:focus-visible { outline: 2px solid var(--panel-accent); outline-offset: 3px; }
+
+.panel-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 12px;
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-family: var(--panel-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.panel-head p { margin: 2px 0 0; color: var(--panel-muted); font-size: 0.9rem; }
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--panel-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--panel-ink);
+}
+
+.device {
+  display: none;
+  margin: 0 20px 12px;
+  padding: 4px;
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  background: var(--panel-soft);
+}
+
+.device button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--panel-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.device button[aria-pressed="true"] { background: var(--panel-ink); color: var(--panel-surface); }
+
+.panel-scroll { overflow-y: auto; padding: 0 20px 16px; }
+
+.base { padding: 14px 16px; border-radius: 14px; background: var(--panel-soft); }
+
+.base h3,
+.extras-title {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--panel-muted);
+}
+
+.base h3 span { color: var(--panel-ink); letter-spacing: 0; text-transform: none; font-size: 0.9rem; }
+
+.base ul { display: grid; gap: 4px; margin: 10px 0 0; padding-left: 18px; font-size: 0.9rem; }
+
+.extras-title { margin: 18px 0 4px; }
+
+.extras { margin: 0; padding: 0; list-style: none; }
+
+.extra { border-bottom: 1px solid var(--panel-line); }
+
+.extra:last-child { border-bottom: 0; }
+
+.extra label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 14px 0;
+  cursor: pointer;
+}
+
+.extra-name { font-weight: 500; }
+
+.extra-hint { grid-column: 1; color: var(--panel-muted); font-size: 0.86rem; line-height: 1.35; }
+
+.extra-price { grid-column: 1; color: var(--panel-accent); font-size: 0.86rem; font-weight: 500; }
+
+.switch { grid-column: 2; grid-row: 1 / span 3; position: relative; width: 46px; height: 28px; }
+
+.switch input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+
+.switch i {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #d9d1c2;
+  transition: background 180ms ease;
+  pointer-events: none;
+}
+
+.switch i::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+  transition: transform 180ms ease;
+}
+
+.switch input:checked + i { background: var(--panel-accent); }
+
+.switch input:checked + i::after { transform: translateX(18px); }
+
+.switch input:focus-visible + i { outline: 2px solid var(--panel-accent); outline-offset: 3px; }
+
+/* Pruebas dentro del panel para los extras que no cambian la página */
+.proof { margin: 0 0 14px; padding: 12px; border-radius: 12px; background: var(--panel-soft); font-size: 0.84rem; }
+
+.proof-title { margin: 0 0 8px; color: var(--panel-muted); }
+
+.proof-title + .proof-title { margin-top: 12px; }
+
+.panel-foot {
+  display: grid;
+  gap: 10px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--panel-line);
+  background: var(--panel-surface);
+}
+
+.total { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0; color: var(--panel-muted); font-size: 0.9rem; }
+
+.total strong { color: var(--panel-ink); font-family: var(--panel-display); font-size: 1.5rem; font-weight: 500; }
+
+.order {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 999px;
+  background: var(--panel-accent);
+  color: #fff6ee;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.reset { border: 0; background: transparent; color: var(--panel-muted); font-size: 0.86rem; text-decoration: underline; text-underline-offset: 3px; }
+
+.fab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--panel-surface);
+  color: var(--panel-ink);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.45);
+  font-weight: 500;
+}
+
+.fab strong { color: var(--panel-accent); font-weight: 600; }
+
+.fab[aria-expanded="true"] { display: none; }
+
+/* Pantallas anchas: el panel va al costado y aparece el selector de pantalla */
+@media (min-width: 860px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .panel {
+    width: var(--panel-width);
+    max-height: none;
+    border-top: 0;
+    border-left: 1px solid var(--panel-line);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .device { display: flex; }
+
+  .fab { right: 24px; bottom: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage { scroll-behavior: auto; }
+  .flash { animation: none; }
+  .toast, .switch i, .switch i::after { transition: none; }
+}

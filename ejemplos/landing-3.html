@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Lucía Mendes — Landing de 3 secciones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="extras-panel.css" />
+    <link rel="stylesheet" href="landing-3.css" />
+  </head>
+  <body>
+    <div class="demo"><span>Ejemplo · Landing 3 secciones · <span data-pack-price>1.800 Bs</span> · activa los extras y mira el cambio</span><a href="../index.html" target="_top">Volver al catálogo</a></div>
+
+    <div class="page" id="page">
+      <header class="nav">
+        <a class="brand" href="#inicio" data-goto="inicio">Lucía Mendes</a>
+        <nav class="nav-links" aria-label="Secciones">
+          <a href="#servicios" data-goto="servicios" data-en="Services">Servicios</a>
+          <a href="#metodo" data-goto="metodo" data-extra="extraSection" data-en="Method" hidden>Método</a>
+          <a href="#contacto" data-goto="contacto" data-en="Contact">Contacto</a>
+        </nav>
+        <div class="lang" data-extra="secondLanguagePair" role="group" aria-label="Idioma" hidden>
+          <button type="button" data-lang="es" aria-pressed="true">ES</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="btn btn-small" type="button" data-goto="contacto" data-en="Book">Agendar</button>
+      </header>
+
+      <section class="hero" id="inicio">
+        <video class="hero-video" id="hero-video" data-extra="heroVideo" muted loop playsinline preload="none" poster="img/lucia-video-poster.webp" hidden></video>
+        <div class="hero-copy">
+          <p class="eyebrow" data-en="Clinical nutrition · Santa Cruz">Nutrición clínica · Santa Cruz</p>
+          <h1 data-en="Eat well without giving up your routine.">Come bien sin dejar tu rutina.</h1>
+          <p class="lead" data-en="Plans you can actually follow with an office job and neighbourhood food. In person in Equipetrol or by video call.">Planes que se pueden seguir con trabajo de oficina y comidas de barrio. Consulta en Equipetrol o por videollamada.</p>
+          <div class="hero-actions">
+            <button class="btn" type="button" data-goto="contacto" data-en="Book a consultation">Agendar consulta</button>
+            <button class="btn btn-ghost" type="button" data-goto="servicios" data-en="See services">Ver servicios</button>
+          </div>
+          <ul class="facts">
+            <li><strong>8</strong><span data-en="years of practice">años de consulta</span></li>
+            <li><strong>60 min</strong><span data-en="first appointment">primera cita</span></li>
+            <li><strong>Online</strong><span data-en="or in person">o presencial</span></li>
+          </ul>
+        </div>
+        <div class="hero-photo" data-without="heroVideo">
+          <img src="img/lucia-hero.webp" alt="" width="900" height="900" />
+        </div>
+      </section>
+
+      <section class="section" id="servicios">
+        <p class="eyebrow" data-en="Services">Servicios</p>
+        <h2 data-en="Three ways to work together">Tres formas de trabajar juntos</h2>
+        <div class="cards">
+          <article class="card">
+            <h3 data-en="First consultation">Consulta inicial</h3>
+            <p data-en="60 minutes to review habits, lab results and goals.">60 minutos para revisar hábitos, laboratorio y objetivos.</p>
+            <b>250 Bs</b>
+          </article>
+          <article class="card card-featured">
+            <span class="tag" data-en="Most chosen">La más elegida</span>
+            <h3 data-en="4-week plan">Plan 4 semanas</h3>
+            <p data-en="Weekly menu, shopping list and follow-up on WhatsApp.">Menú semanal, lista de compras y seguimiento por WhatsApp.</p>
+            <b>680 Bs</b>
+          </article>
+          <article class="card">
+            <h3 data-en="Companies">Empresas</h3>
+            <p data-en="A 45-minute talk for teams and a group plan.">Charla de 45 minutos para equipos y plan grupal.</p>
+            <b data-en="On request">A convenir</b>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-tint" id="metodo" data-extra="extraSection" hidden>
+        <p class="eyebrow" data-en="Extra section">Sección extra</p>
+        <h2 data-en="How I work">Cómo trabajo</h2>
+        <ol class="steps">
+          <li><span>01</span><h3 data-en="We talk">Conversamos</h3><p data-en="Your schedule, what you like and what you can cook.">Tus horarios, lo que te gusta y lo que puedes cocinar.</p></li>
+          <li><span>02</span><h3 data-en="I build your plan">Armo tu plan</h3><p data-en="With food you find at the market, no odd ingredients.">Con comida que encuentras en el mercado, sin ingredientes raros.</p></li>
+          <li><span>03</span><h3 data-en="We adjust">Ajustamos</h3><p data-en="A weekly check-in to change whatever isn't working.">Un control por semana para cambiar lo que no funcione.</p></li>
+        </ol>
+      </section>
+
+      <section class="section" id="galeria" data-extra="photoGallery" hidden>
+        <p class="eyebrow" data-en="Gallery">Galería</p>
+        <h2 data-en="Plates from my patients' plans">Platos de los planes de mis pacientes</h2>
+        <div class="gallery">
+          <img src="img/lucia-g1.webp" alt="" loading="lazy" width="720" height="540" />
+          <img src="img/lucia-g2.webp" alt="" loading="lazy" width="720" height="540" />
+          <img src="img/lucia-g3.webp" alt="" loading="lazy" width="720" height="540" />
+          <img src="img/lucia-g4.webp" alt="" loading="lazy" width="720" height="540" />
+          <img src="img/lucia-g5.webp" alt="" loading="lazy" width="720" height="540" />
+          <img src="img/lucia-g6.webp" alt="" loading="lazy" width="720" height="540" />
+        </div>
+      </section>
+
+      <section class="section section-tint" id="testimonios" data-extra="testimonials" hidden>
+        <p class="eyebrow" data-en="Testimonials">Testimonios</p>
+        <h2 data-en="What patients say">Lo que dicen los pacientes</h2>
+        <div class="quotes">
+          <figure><blockquote data-en="“It was the first plan I could keep up with while working all day.”">“Fue el primer plan que pude seguir trabajando todo el día.”</blockquote><figcaption>Andrea R. · <span data-en="4-week plan">Plan 4 semanas</span></figcaption></figure>
+          <figure><blockquote data-en="“She didn't take away my salteñas. She taught me when to have them.”">“No me quitó las salteñas. Me enseñó cuándo comerlas.”</blockquote><figcaption>Marco T. · <span data-en="First consultation">Consulta inicial</span></figcaption></figure>
+          <figure><blockquote data-en="“The talk for our team was clear and had no lecturing.”">“La charla para el equipo fue clara y sin sermones.”</blockquote><figcaption>Paola V. · <span data-en="Companies">Empresas</span></figcaption></figure>
+        </div>
+        <p class="fine" data-en="Sample testimonials for the demo.">Testimonios de muestra para la demo.</p>
+      </section>
+
+      <section class="section contact" id="contacto">
+        <div class="contact-copy">
+          <p class="eyebrow" data-en="Contact">Contacto</p>
+          <h2 data-en="Book your first appointment">Agenda tu primera cita</h2>
+          <p class="lead" data-en="Message me and I'll reply the same day with available times.">Escríbeme y te respondo el mismo día con los horarios libres.</p>
+          <button class="btn" id="whatsapp" type="button" data-en="Message on WhatsApp">Escribir por WhatsApp</button>
+          <ul class="contact-data">
+            <li data-en="Equipetrol, Santa Cruz de la Sierra">Equipetrol, Santa Cruz de la Sierra</li>
+            <li data-en="Monday to Friday, 9:00 to 18:00">Lunes a viernes, 9:00 a 18:00</li>
+            <li><a href="#" data-fake>Instagram</a> · <a href="#" data-fake>Facebook</a></li>
+          </ul>
+        </div>
+
+        <div class="contact-tools">
+          <form class="tool" id="contact-form" data-extra="formToEmail" novalidate hidden>
+            <h3 data-en="Or leave your details">O déjame tus datos</h3>
+            <label><span data-en="Name">Nombre</span><input name="name" type="text" autocomplete="name" required /></label>
+            <label><span>WhatsApp</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required /></label>
+            <label><span data-en="What would you like to work on?">¿Qué te gustaría trabajar?</span><textarea name="message" rows="3"></textarea></label>
+            <p class="form-error" id="form-error" role="alert" hidden data-en="Name and WhatsApp are required.">Faltan el nombre y el WhatsApp.</p>
+            <button class="btn" type="submit" data-en="Send">Enviar</button>
+          </form>
+
+          <div class="tool" id="booking" data-extra="bookingCalendar" hidden>
+            <h3 data-en="Pick a day and time">Elige día y hora</h3>
+            <div class="days" id="booking-days" role="group" aria-label="Día"></div>
+            <div class="slots" id="booking-slots" role="group" aria-label="Hora"></div>
+            <button class="btn" id="booking-confirm" type="button" disabled data-en="Confirm booking">Confirmar reserva</button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <span>© Lucía Mendes</span>
+        <span data-en="Licensed nutritionist · Demo site">Nutricionista colegiada · Sitio de muestra</span>
+      </footer>
+    </div>
+
+    <script src="embed.js"></script>
+    <script type="module" src="landing-3.js"></script>
+  </body>
+</html>

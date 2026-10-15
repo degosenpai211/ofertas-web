@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Panel Norte — CRUD</title>
+    <link rel="stylesheet" href="demo.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      body { margin:0; font-family:Outfit,sans-serif; background:#f4f1ec; color:#1c1916; display:grid; grid-template-columns:220px 1fr; min-height:100vh; }
+      .demo { grid-column:1/-1; }
+      aside { background:#1c1916; color:#efe8df; padding:20px 16px; }
+      aside button { display:block; width:100%; text-align:left; background:transparent; border:0; color:#cfc6ba; padding:10px 0; cursor:pointer; font:inherit; }
+      aside button.on { color:#fff; font-weight:600; }
+      main { padding:24px; }
+      .toolbar { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; }
+      button.primary { background:#1c1916; color:#fff; border:0; border-radius:8px; padding:8px 14px; cursor:pointer; }
+      input, select { font:inherit; border:1px solid #d9d1c7; border-radius:8px; padding:8px 10px; }
+      table { width:100%; border-collapse:collapse; margin-top:16px; background:#fff; border-radius:12px; overflow:hidden; }
+      th, td { text-align:left; padding:10px 12px; border-bottom:1px solid #eee7de; font-size:14px; }
+      .ghost { background:#fff; border:1px solid #d9d1c7; border-radius:8px; padding:6px 10px; cursor:pointer; }
+      dialog { border:0; border-radius:12px; padding:20px; width:min(420px,92vw); }
+      dialog form { display:grid; gap:10px; }
+      .toast { position:fixed; bottom:16px; right:16px; background:#1c1916; color:#fff; padding:10px 14px; border-radius:8px; display:none; }
+      .empty { padding:24px; color:#6b645c; }
+      .pill { font-size:12px; padding:2px 8px; border-radius:999px; background:#e8efe6; }
+      .pill.off { background:#f0e4e0; }
+      @media (max-width:700px) { body { grid-template-columns:1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="demo"><span>Ejemplo · CRUD · 4.800 Bs (USD 435)</span><a href="../index.html">Volver al catálogo</a></div>
+    <aside>
+      <strong>Norte Admin</strong>
+      <button class="on" data-tab="clientes" type="button">Clientes</button>
+      <button data-tab="productos" type="button">Inventario</button>
+    </aside>
+    <main>
+      <div class="toolbar">
+        <div>
+          <h1 id="title" style="margin:0">Clientes</h1>
+          <p style="color:#6b645c;margin:4px 0 0">Alta, edición, baja y búsqueda. Se guarda en este navegador.</p>
+        </div>
+        <div>
+          <input id="q" placeholder="Buscar…" />
+          <button class="primary" id="nuevo" type="button">Nuevo</button>
+        </div>
+      </div>
+      <table>
+        <thead id="head"></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </main>
+    <dialog id="dlg">
+      <form method="dialog" id="form"></form>
+    </dialog>
+    <div class="toast" id="toast"></div>
+    <script src="embed.js"></script>
+    <script>
+      const db = {
+        clientes: JSON.parse(localStorage.getItem("norte-c") || "null") || [
+          { id: "1", nombre: "Carla Méndez", whatsapp: "71000001", estado: "activo" },
+          { id: "2", nombre: "Taller Sur", whatsapp: "71000002", estado: "activo" },
+        ],
+        productos: JSON.parse(localStorage.getItem("norte-p") || "null") || [
+          { id: "1", nombre: "Pastillas de freno", stock: 3, precio: 180 },
+          { id: "2", nombre: "Filtro de aceite", stock: 11, precio: 45 },
+        ],
+      }
+      let tab = "clientes"
+      let editing = null
+      const schemas = {
+        clientes: [
+          ["nombre", "Nombre"],
+          ["whatsapp", "WhatsApp"],
+          ["estado", "Estado"],
+        ],
+        productos: [
+          ["nombre", "Nombre"],
+          ["stock", "Stock"],
+          ["precio", "Precio Bs"],
+        ],
+      }
+      function persist() {
+        localStorage.setItem("norte-c", JSON.stringify(db.clientes))
+        localStorage.setItem("norte-p", JSON.stringify(db.productos))
+      }
+      function toast(msg) {
+        const el = document.getElementById("toast")
+        el.textContent = msg
+        el.style.display = "block"
+        setTimeout(() => { el.style.display = "none" }, 1400)
+      }
+      function render() {
+        document.getElementById("title").textContent = tab === "clientes" ? "Clientes" : "Inventario"
+        document.querySelectorAll("aside button").forEach((b) => b.classList.toggle("on", b.dataset.tab === tab))
+        const cols = schemas[tab]
+        document.getElementById("head").innerHTML = `<tr>${cols.map((c) => `<th>${c[1]}</th>`).join("")}<th></th></tr>`
+        const q = document.getElementById("q").value.toLowerCase()
+        const rows = db[tab].filter((r) => JSON.stringify(r).toLowerCase().includes(q))
+        const body = document.getElementById("rows")
+        if (!rows.length) {
+          body.innerHTML = `<tr><td class="empty" colspan="5">No hay registros. Crea el primero.</td></tr>`
+          return
+        }
+        body.innerHTML = rows.map((r) => `<tr>
+          ${cols.map(([k]) => `<td>${k === "estado" ? `<span class="pill ${r[k] === "inactivo" ? "off" : ""}">${r[k]}</span>` : r[k]}</td>`).join("")}
+          <td>
+            <button class="ghost" data-edit="${r.id}">Editar</button>
+            <button class="ghost" data-del="${r.id}">Borrar</button>
+          </td>
+        </tr>`).join("")
+      }
+      function openForm(row) {
+        editing = row
+        const cols = schemas[tab]
+        const form = document.getElementById("form")
+        form.innerHTML = `<h3>${row ? "Editar" : "Nuevo"}</h3>` + cols.map(([k, label]) => {
+          if (k === "estado") {
+            return `<select name="${k}"><option>activo</option><option>inactivo</option></select>`
+          }
+          const type = k === "stock" || k === "precio" ? "number" : "text"
+          return `<input name="${k}" type="${type}" required placeholder="${label}" />`
+        }).join("") + `<div><button class="primary" value="ok">Guardar</button> <button class="ghost" value="cancel">Cancelar</button></div>`
+        if (row) cols.forEach(([k]) => { if (form[k]) form[k].value = row[k] })
+        document.getElementById("dlg").showModal()
+      }
+      document.getElementById("q").oninput = render
+      document.getElementById("nuevo").onclick = () => openForm(null)
+      document.querySelectorAll("aside button").forEach((b) => {
+        b.onclick = () => { tab = b.dataset.tab; document.getElementById("q").value = ""; render() }
+      })
+      document.getElementById("rows").onclick = (e) => {
+        const id = e.target.dataset.edit || e.target.dataset.del
+        if (!id) return
+        if (e.target.dataset.del) {
+          if (!confirm("¿Borrar este registro?")) return
+          db[tab] = db[tab].filter((r) => r.id !== id)
+          persist(); render(); toast("Eliminado")
+        } else openForm(db[tab].find((r) => r.id === id))
+      }
+      document.getElementById("form").onsubmit = (e) => {
+        if (e.submitter?.value !== "ok") return
+        const data = {}
+        schemas[tab].forEach(([k]) => {
+          data[k] = k === "stock" || k === "precio" ? Number(e.target[k].value) : e.target[k].value
+        })
+        if (editing) Object.assign(editing, data)
+        else db[tab].unshift({ id: String(Date.now()), ...data })
+        persist(); render(); toast("Guardado")
+      }
+      render()
+    </script>
+  </body>
+</html>

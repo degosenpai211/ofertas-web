@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Taller OS — ERP</title>
+    <link rel="stylesheet" href="demo.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      body { margin:0; font-family:Outfit,sans-serif; background:#eef1f4; color:#12202c; }
+      .app { display:grid; grid-template-columns:200px 1fr; min-height:calc(100vh - 36px); }
+      aside { background:#12202c; color:#d7e1ea; padding:18px 14px; }
+      aside button { display:block; width:100%; text-align:left; background:transparent; border:0; color:#9fb1c2; padding:8px 0; cursor:pointer; font:inherit; }
+      aside button.on { color:#fff; }
+      main { padding:20px; }
+      .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+      .kpi { background:#fff; border-radius:12px; padding:14px; }
+      .kpi b { font-size:1.35rem; display:block; }
+      .board { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:18px; }
+      .col { background:#fff; border-radius:12px; padding:10px; min-height:260px; }
+      .col h3 { margin:0 0 8px; font-size:13px; color:#5b6b78; }
+      .ot { background:#eef1f4; border-radius:10px; padding:10px; margin-bottom:8px; font-size:14px; }
+      .ot button { margin-top:6px; margin-right:4px; font-size:12px; }
+      table { width:100%; border-collapse:collapse; background:#fff; margin-top:18px; border-radius:12px; overflow:hidden; }
+      td, th { padding:10px 12px; text-align:left; border-bottom:1px solid #e6ebf0; font-size:14px; }
+      @media (max-width:800px) { .app, .board { grid-template-columns:1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="demo"><span>Ejemplo · ERP · 15.000 Bs (USD 1.365) · mueve las OT de columna</span><a href="../index.html">Volver al catálogo</a></div>
+    <div class="app">
+      <aside>
+        <strong>Taller OS</strong>
+        <button class="on" data-view="panel" type="button">Panel</button>
+        <button data-view="finanzas" type="button">Finanzas</button>
+      </aside>
+      <main>
+        <div id="panel">
+          <h1>Hoy</h1>
+          <div class="kpis">
+            <div class="kpi"><span>En proceso</span><b id="k-proc">0</b></div>
+            <div class="kpi"><span>Sin recoger</span><b id="k-term">0</b></div>
+            <div class="kpi"><span>Entregadas</span><b id="k-ent">0</b></div>
+            <div class="kpi"><span>Ingresos semana</span><b>11.100 Bs</b></div>
+          </div>
+          <div class="board" id="board"></div>
+        </div>
+        <div id="finanzas" hidden>
+          <h1>Finanzas</h1>
+          <table>
+            <thead><tr><th>Rubro</th><th>Bs</th></tr></thead>
+            <tbody>
+              <tr><td>Ingresos por servicios</td><td>11.100</td></tr>
+              <tr><td>Filamento</td><td>2.400</td></tr>
+              <tr><td>Sueldos</td><td>3.200</td></tr>
+              <tr><td>Margen</td><td>5.500</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <script src="embed.js"></script>
+    <script>
+      const cols = ["en_proceso", "terminado", "entregado"]
+      const labels = { en_proceso: "En proceso", terminado: "Terminado (sin recoger)", entregado: "Entregado" }
+      let ots = JSON.parse(localStorage.getItem("taller-ots") || "null") || [
+        { id: "104", auto: "Toyota Hilux", step: "Soldadura", status: "en_proceso" },
+        { id: "107", auto: "Suzuki", step: "Pintura", status: "en_proceso" },
+        { id: "101", auto: "Nissan", step: "Lista", status: "terminado" },
+        { id: "099", auto: "Mazda", step: "Lista", status: "terminado" },
+        { id: "098", auto: "Ford", step: "Cobrado", status: "entregado" },
+      ]
+      function save() { localStorage.setItem("taller-ots", JSON.stringify(ots)) }
+      function move(id, dir) {
+        const ot = ots.find((o) => o.id === id)
+        const i = cols.indexOf(ot.status) + dir
+        if (i < 0 || i >= cols.length) return
+        ot.status = cols[i]
+        save(); render()
+      }
+      function render() {
+        document.getElementById("k-proc").textContent = ots.filter((o) => o.status === "en_proceso").length
+        document.getElementById("k-term").textContent = ots.filter((o) => o.status === "terminado").length
+        document.getElementById("k-ent").textContent = ots.filter((o) => o.status === "entregado").length
+        document.getElementById("board").innerHTML = cols.map((c) => `<div class="col">
+          <h3>${labels[c]}</h3>
+          ${ots.filter((o) => o.status === c).map((o) => `<div class="ot">
+            OT-${o.id} · ${o.auto}<br />${o.step}
+            <div>
+              <button type="button" data-m="${o.id}" data-d="-1">←</button>
+              <button type="button" data-m="${o.id}" data-d="1">→</button>
+            </div>
+          </div>`).join("")}
+        </div>`).join("")
+      }
+      document.getElementById("board").onclick = (e) => {
+        if (!e.target.dataset.m) return
+        move(e.target.dataset.m, Number(e.target.dataset.d))
+      }
+      document.querySelectorAll("aside button").forEach((b) => {
+        b.onclick = () => {
+          document.querySelectorAll("aside button").forEach((x) => x.classList.remove("on"))
+          b.classList.add("on")
+          document.getElementById("panel").hidden = b.dataset.view !== "panel"
+          document.getElementById("finanzas").hidden = b.dataset.view !== "finanzas"
+        }
+      })
+      render()
+    </script>
+  </body>
+</html>

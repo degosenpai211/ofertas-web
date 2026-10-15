@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Hiland Bot — IA</title>
+    <link rel="stylesheet" href="demo.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:"Segoe UI",sans-serif; background:#0f1412; color:#e8eee9; }
+      .demo { background:#11403f; font-size:13px; padding:8px 16px; display:flex; justify-content:space-between; }
+      .demo a { color:#d7b07a; }
+      main { display:grid; gap:16px; padding:20px; }
+      @media (min-width:900px) { main { grid-template-columns:1fr 1fr; } }
+      h1 { font-size:1.4rem; margin:0 0 8px; }
+      .muted { color:#9bb0a8; font-size:.92rem; }
+      .card { background:#171e1c; border:1px solid #2a3833; border-radius:14px; padding:16px; min-height:420px; display:flex; flex-direction:column; }
+      .log { font-family:ui-monospace,monospace; font-size:12px; background:#0c100f; padding:12px; border-radius:8px; flex:1; white-space:pre-wrap; color:#b7e0c8; overflow:auto; }
+      .chat { flex:1; overflow:auto; display:flex; flex-direction:column; gap:8px; }
+      .msg { max-width:80%; padding:8px 12px; border-radius:12px; font-size:.92rem; }
+      .msg.user { align-self:flex-end; background:#2f6f62; }
+      .msg.bot { align-self:flex-start; background:#24302c; }
+      .msg.typing { opacity:.7; font-style:italic; }
+      form { display:flex; gap:8px; margin-top:10px; }
+      input { flex:1; border-radius:8px; border:1px solid #2a3833; background:#0c100f; color:#fff; padding:8px 10px; }
+      button { background:#d7b07a; border:0; border-radius:8px; padding:8px 12px; cursor:pointer; }
+      .chips { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+      .chips button { background:#24302c; color:#e8eee9; }
+    </style>
+  </head>
+  <body>
+    <div class="demo">
+      <span>Ejemplo · Conexiones IA · 2.200 Bs (USD 200) · demo local, sin API key</span>
+      <a href="../index.html">Volver al catálogo</a>
+    </div>
+    <main>
+      <section class="card">
+        <h1>Hiland Bot</h1>
+        <p class="muted">En producción esto pega a Groq/OpenAI o WhatsApp. Aquí el “modelo” es local: entiende stock, horario y deriva a humano.</p>
+        <div class="chips">
+          <button type="button" data-q="¿Tienen pastillas de freno?">Stock</button>
+          <button type="button" data-q="¿Hasta qué hora atienden?">Horario</button>
+          <button type="button" data-q="Quiero una proforma">Proforma</button>
+        </div>
+        <div class="chat" id="chat"></div>
+        <form id="form">
+          <input id="q" placeholder="Escribe al taller…" autocomplete="off" />
+          <button type="submit">Enviar</button>
+        </form>
+      </section>
+      <section class="card">
+        <h1>Request / response</h1>
+        <p class="muted">Así se ve la conexión: el front llama POST /ai/chat y el backend elige tool o texto.</p>
+        <div class="log" id="log">Esperando mensaje…</div>
+      </section>
+    </main>
+    <script>
+      const chat = document.getElementById("chat")
+      const log = document.getElementById("log")
+      const replies = [
+        [/freno|pastilla|stock/i, "stock_lookup", "Sí: pastillas delanteras, 3 pares. Bs. 180 el par. ¿Reservo?"],
+        [/hora|atiend/i, "hours", "Lun–sáb 8:30–18:00, Equipetrol. Domingos cerrado."],
+        [/proforma|cotiz/i, "create_lead", "Te armo la proforma. Nombre y WhatsApp y en 10 min la tienes."],
+      ]
+      function add(role, text) {
+        const el = document.createElement("div")
+        el.className = "msg " + role
+        el.textContent = text
+        chat.appendChild(el)
+        chat.scrollTop = chat.scrollHeight
+      }
+      async function ask(text) {
+        add("user", text)
+        const hit = replies.find(([re]) => re.test(text))
+        const tool = hit ? hit[1] : "fallback"
+        const answer = hit ? hit[2] : "Eso se lo paso a un humano del taller. ¿WhatsApp?"
+        log.textContent = JSON.stringify({
+          endpoint: "POST /ai/chat",
+          request: { channel: "web", message: text },
+          tool,
+          response: { text: answer },
+        }, null, 2)
+        const wait = document.createElement("div")
+        wait.className = "msg bot typing"
+        wait.textContent = "escribiendo…"
+        chat.appendChild(wait)
+        chat.scrollTop = chat.scrollHeight
+        await new Promise((r) => setTimeout(r, 650))
+        wait.remove()
+        add("bot", answer)
+      }
+      document.getElementById("form").onsubmit = (e) => {
+        e.preventDefault()
+        const q = document.getElementById("q")
+        if (!q.value.trim()) return
+        ask(q.value.trim())
+        q.value = ""
+      }
+      document.querySelectorAll("[data-q]").forEach((b) => {
+        b.onclick = () => ask(b.dataset.q)
+      })
+      add("bot", "Soy el bot del taller. Pregunta stock, horario o una proforma.")
+    </script>
+    <script src="embed.js"></script>
+  </body>
+</html>

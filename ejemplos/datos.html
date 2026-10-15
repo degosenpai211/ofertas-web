@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Taller en números — Análisis de datos</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="demo.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root { --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --line:#e4e3de; --bg:#f1f0ec; --income:#2a78d6; --expense:#eb6834; }
+      * { box-sizing:border-box; }
+      body { margin:0; font-family:Outfit,sans-serif; background:var(--bg); color:var(--ink); }
+      main { max-width:1120px; margin:0 auto; padding:24px 20px 48px; }
+      h1 { margin:0; font-size:1.7rem; font-weight:600; }
+      h2 { margin:0 0 4px; font-size:1.05rem; font-weight:600; }
+      .sub { margin:4px 0 20px; color:var(--ink-2); }
+      .note { color:var(--ink-2); font-size:13px; margin:0 0 14px; }
+      .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
+      .kpi, .panel { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; }
+      .kpi span { color:var(--ink-2); font-size:13px; }
+      .kpi b { display:block; margin-top:2px; font-size:1.6rem; font-weight:600; }
+      .kpi small { color:var(--ink-2); }
+      .grid { display:grid; grid-template-columns:1.6fr 1fr; gap:12px; margin-top:12px; }
+      .panel-head { display:flex; justify-content:space-between; align-items:start; gap:12px; flex-wrap:wrap; }
+      .legend { display:flex; gap:14px; margin:0; padding:0; list-style:none; font-size:13px; color:var(--ink-2); }
+      .legend i { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; }
+      .toggle { font:inherit; font-size:13px; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer; }
+      .chart { position:relative; display:grid; grid-template-columns:repeat(12,1fr); align-items:end; gap:10px; height:220px; margin-top:14px; border-bottom:1px solid var(--line); background:repeating-linear-gradient(to top, transparent 0 54px, var(--line) 54px 55px); }
+      .week { position:relative; display:flex; align-items:end; justify-content:center; gap:2px; height:100%; }
+      .week:hover, .week:focus-visible { background:rgb(11 11 11 / 0.05); outline:0; }
+      .bar { width:42%; max-width:18px; border-radius:4px 4px 0 0; }
+      .bar.in { background:var(--income); }
+      .bar.out { background:var(--expense); }
+      .axis { display:grid; grid-template-columns:repeat(12,1fr); gap:10px; margin-top:6px; font-size:12px; color:var(--ink-2); text-align:center; }
+      .tip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); z-index:5; display:none; min-width:150px; padding:8px 10px; border-radius:8px; background:var(--ink); color:#fff; font-size:12px; line-height:1.5; text-align:left; white-space:nowrap; pointer-events:none; }
+      .week:hover .tip, .week:focus-visible .tip { display:block; }
+      .week:nth-child(-n+2) .tip { left:0; transform:none; }
+      .week:nth-last-child(-n+2) .tip { left:auto; right:0; transform:none; }
+      .rows { display:grid; gap:10px; margin-top:14px; }
+      .row { display:grid; grid-template-columns:1fr auto; gap:4px 10px; font-size:13px; }
+      .row .track { grid-column:1 / -1; height:8px; border-radius:4px; background:var(--bg); }
+      .row .fill { display:block; height:100%; border-radius:0 4px 4px 0; background:var(--income); }
+      .row em { font-style:normal; color:var(--ink-2); }
+      table { width:100%; border-collapse:collapse; margin-top:14px; font-size:13px; }
+      th, td { padding:8px 10px; text-align:right; border-bottom:1px solid var(--line); }
+      th:first-child, td:first-child { text-align:left; }
+      th { color:var(--ink-2); font-weight:500; }
+      ol { margin:14px 0 0; padding-left:20px; display:grid; gap:10px; font-size:14px; }
+      ol strong { font-weight:600; }
+      pre { margin:14px 0 0; padding:14px; border-radius:10px; background:#12202c; color:#d7e1ea; font-size:12.5px; line-height:1.55; overflow-x:auto; }
+      @media (max-width:820px) { .grid { grid-template-columns:1fr; } .chart, .axis { gap:4px; } }
+    </style>
+  </head>
+  <body>
+    <div class="demo"><span>Ejemplo · Análisis de datos · 12 semanas de muestra de un taller</span><a href="../index.html">Volver al catálogo</a></div>
+    <main>
+      <h1>Taller en números</h1>
+      <p class="sub">12 semanas de operación: ingresos, egresos, proformas y piezas sin recoger. Datos de práctica, no de un cliente.</p>
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Ingresos y egresos por semana</h2>
+              <ul class="legend">
+                <li><i style="background:var(--income)"></i>Ingresos</li>
+                <li><i style="background:var(--expense)"></i>Egresos</li>
+              </ul>
+            </div>
+            <button class="toggle" id="toggle" type="button" aria-pressed="false">Ver tabla</button>
+          </div>
+          <div id="chart-view">
+            <div class="chart" id="chart"></div>
+            <div class="axis" id="axis"></div>
+          </div>
+          <table id="table-view" hidden></table>
+        </section>
+
+        <section class="panel">
+          <h2>En qué se va la plata</h2>
+          <p class="note">Egresos por rubro, 12 semanas</p>
+          <div class="rows" id="rubros"></div>
+        </section>
+      </div>
+
+      <div class="grid">
+        <section class="panel">
+          <h2>Qué haría el lunes</h2>
+          <p class="note">Recomendaciones que salen de los números de arriba</p>
+          <ol id="recs"></ol>
+        </section>
+
+        <section class="panel">
+          <h2>La consulta detrás</h2>
+          <p class="note">Conversión de proforma a orden, por semana</p>
+          <pre>SELECT semana,
+       COUNT(DISTINCT p.id)  AS proformas,
+       COUNT(DISTINCT o.id)  AS ordenes,
+       ROUND(100.0 * COUNT(DISTINCT o.id)
+             / COUNT(DISTINCT p.id)) AS conversion
+FROM proformas p
+LEFT JOIN ordenes o ON o.proforma_id = p.id
+GROUP BY semana
+ORDER BY semana;</pre>
+        </section>
+      </div>
+    </main>
+    <script src="embed.js"></script>
+    <script>
+      const WEEKS = [
+        { semana: "S1", ingresos: 8420, egresos: 6100, entregadas: 11, sinRecoger: 4, proformas: 18, ots: 9 },
+        { semana: "S2", ingresos: 9100, egresos: 6400, entregadas: 13, sinRecoger: 5, proformas: 16, ots: 10 },
+        { semana: "S3", ingresos: 7800, egresos: 7050, entregadas: 9, sinRecoger: 7, proformas: 21, ots: 8 },
+        { semana: "S4", ingresos: 10250, egresos: 6800, entregadas: 14, sinRecoger: 6, proformas: 19, ots: 12 },
+        { semana: "S5", ingresos: 9700, egresos: 7200, entregadas: 12, sinRecoger: 8, proformas: 17, ots: 11 },
+        { semana: "S6", ingresos: 8650, egresos: 8100, entregadas: 10, sinRecoger: 9, proformas: 22, ots: 7 },
+        { semana: "S7", ingresos: 11100, egresos: 7400, entregadas: 16, sinRecoger: 7, proformas: 20, ots: 13 },
+        { semana: "S8", ingresos: 10840, egresos: 7600, entregadas: 15, sinRecoger: 8, proformas: 18, ots: 12 },
+        { semana: "S9", ingresos: 9400, egresos: 8300, entregadas: 11, sinRecoger: 10, proformas: 24, ots: 9 },
+        { semana: "S10", ingresos: 12100, egresos: 7900, entregadas: 17, sinRecoger: 9, proformas: 21, ots: 14 },
+        { semana: "S11", ingresos: 11550, egresos: 8200, entregadas: 16, sinRecoger: 11, proformas: 19, ots: 13 },
+        { semana: "S12", ingresos: 11880, egresos: 8450, entregadas: 15, sinRecoger: 12, proformas: 23, ots: 12 },
+      ]
+      const RUBROS = [
+        { rubro: "Filamentos / Plastic 27", monto: 21400 },
+        { rubro: "Sueldos y salarios", monto: 18600 },
+        { rubro: "Alquileres", monto: 14400 },
+        { rubro: "Insumos y herramientas", monto: 12850 },
+        { rubro: "Servicios básicos", monto: 9200 },
+        { rubro: "Otros egresos", monto: 13050 },
+      ]
+
+      const bs = (n) => `${String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".")} Bs`
+      const pct = (part, total) => Math.round((part / total) * 100)
+      const sum = (key) => WEEKS.reduce((acc, week) => acc + week[key], 0)
+      const marginPct = (week) => pct(week.ingresos - week.egresos, week.ingresos)
+
+      const ingresos = sum("ingresos")
+      const egresos = sum("egresos")
+      const proformas = sum("proformas")
+      const ots = sum("ots")
+      const first = WEEKS[0]
+      const last = WEEKS[WEEKS.length - 1]
+      const worst = WEEKS.reduce((low, week) => (marginPct(week) < marginPct(low) ? week : low))
+      const topRubro = RUBROS.reduce((top, item) => (item.monto > top.monto ? item : top))
+
+      document.getElementById("kpis").innerHTML = [
+        ["Ingresos", bs(ingresos), "12 semanas"],
+        ["Margen", `${pct(ingresos - egresos, ingresos)}%`, bs(ingresos - egresos)],
+        ["Proforma → orden", `${pct(ots, proformas)}%`, `${ots} de ${proformas} proformas`],
+        ["Ticket promedio", bs(ingresos / sum("entregadas")), "por trabajo entregado"],
+        ["Piezas sin recoger", last.sinRecoger, `eran ${first.sinRecoger} en ${first.semana}`],
+      ].map(([label, value, detail]) => `<div class="kpi"><span>${label}</span><b>${value}</b><small>${detail}</small></div>`).join("")
+
+      const scaleMax = Math.max(...WEEKS.map((week) => Math.max(week.ingresos, week.egresos)))
+      document.getElementById("chart").innerHTML = WEEKS.map((week) => `<div class="week" tabindex="0">
+        <span class="bar in" style="height:${(week.ingresos / scaleMax) * 100}%"></span>
+        <span class="bar out" style="height:${(week.egresos / scaleMax) * 100}%"></span>
+        <span class="tip"><strong>${week.semana}</strong><br />Ingresos: ${bs(week.ingresos)}<br />Egresos: ${bs(week.egresos)}<br />Margen: ${marginPct(week)}%</span>
+      </div>`).join("")
+      document.getElementById("axis").innerHTML = WEEKS.map((week) => `<span>${week.semana}</span>`).join("")
+
+      document.getElementById("table-view").innerHTML = `<thead><tr><th>Semana</th><th>Ingresos</th><th>Egresos</th><th>Margen</th><th>Proformas</th><th>Órdenes</th><th>Sin recoger</th></tr></thead>
+        <tbody>${WEEKS.map((week) => `<tr><td>${week.semana}</td><td>${bs(week.ingresos)}</td><td>${bs(week.egresos)}</td><td>${marginPct(week)}%</td><td>${week.proformas}</td><td>${week.ots}</td><td>${week.sinRecoger}</td></tr>`).join("")}</tbody>`
+
+      const rubroMax = topRubro.monto
+      const rubroTotal = RUBROS.reduce((acc, item) => acc + item.monto, 0)
+      document.getElementById("rubros").innerHTML = [...RUBROS].sort((a, b) => b.monto - a.monto).map((item) => `<div class="row">
+        <span>${item.rubro}</span><em>${bs(item.monto)} · ${pct(item.monto, rubroTotal)}%</em>
+        <span class="track"><span class="fill" style="width:${(item.monto / rubroMax) * 100}%"></span></span>
+      </div>`).join("")
+
+      document.getElementById("recs").innerHTML = [
+        `<strong>Cobrar al entregar.</strong> Las piezas sin recoger pasaron de ${first.sinRecoger} a ${last.sinRecoger}: es plata ya trabajada que no entra a caja.`,
+        `<strong>Seguir las proformas.</strong> Solo ${pct(ots, proformas)}% termina en orden. Un mensaje a las 48 horas es el cambio más barato.`,
+        `<strong>Revisar ${worst.semana}.</strong> Fue la semana más floja: margen de ${marginPct(worst)}% con ${bs(worst.egresos)} de egresos.`,
+        `<strong>Negociar con el proveedor.</strong> ${topRubro.rubro} es el rubro más pesado: ${pct(topRubro.monto, rubroTotal)}% del gasto.`,
+      ].map((text) => `<li>${text}</li>`).join("")
+
+      const toggle = document.getElementById("toggle")
+      toggle.onclick = () => {
+        const showTable = toggle.getAttribute("aria-pressed") !== "true"
+        toggle.setAttribute("aria-pressed", String(showTable))
+        toggle.textContent = showTable ? "Ver gráfico" : "Ver tabla"
+        document.getElementById("chart-view").hidden = showTable
+        document.getElementById("table-view").hidden = !showTable
+      }
+    </script>
+  </body>
+</html>

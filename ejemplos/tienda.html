@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Andes Market</title>
+    <link rel="stylesheet" href="demo.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      body { margin:0; font-family:Outfit,sans-serif; background:#faf6f1; color:#2a1c16; }
+      header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:#fff; border-bottom:1px solid #eadfd4; position:sticky; top:0; }
+      .cart-btn { background:#8c3b2a; color:#fff; border:0; border-radius:999px; padding:8px 14px; cursor:pointer; }
+      .filters { display:flex; gap:8px; padding:16px 20px 0; flex-wrap:wrap; }
+      .filters button { border:1px solid #eadfd4; background:#fff; border-radius:999px; padding:6px 12px; cursor:pointer; }
+      .filters button.on { background:#2a1c16; color:#fff; }
+      .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; padding:20px; }
+      .card { background:#fff; border:1px solid #eadfd4; border-radius:16px; overflow:hidden; display:flex; flex-direction:column; }
+      .swatch { height:130px; }
+      .info { padding:12px; flex:1; }
+      .info p { margin:6px 0 0; color:#6d5b4f; }
+      .card > button { border:0; background:#8c3b2a; color:#fff; padding:10px; cursor:pointer; }
+      .drawer { position:fixed; inset:0 0 0 auto; width:min(360px,100%); background:#fff; box-shadow:none; border-left:1px solid #eadfd4; padding:20px; transform:translateX(100%); transition:transform .25s ease; z-index:30; }
+      .drawer.open { transform:none; }
+      .line { display:flex; justify-content:space-between; gap:8px; padding:8px 0; border-bottom:1px solid #f0e6dc; font-size:.92rem; }
+      .wa { display:inline-block; margin-top:12px; background:#25d366; color:#072; text-decoration:none; padding:10px 14px; border-radius:999px; }
+      .empty { color:#8a7b70; }
+    </style>
+  </head>
+  <body>
+    <div class="demo"><span>Ejemplo · E-commerce · 8.500 Bs (USD 775)</span><a href="../index.html">Volver al catálogo</a></div>
+    <header>
+      <strong>Andes Market</strong>
+      <button class="cart-btn" id="open" type="button">Carrito <b id="count">0</b></button>
+    </header>
+    <div class="filters" id="filters"></div>
+    <section class="grid" id="products"></section>
+    <aside class="drawer" id="drawer">
+      <h2>Pedido</h2>
+      <div id="list"></div>
+      <p>Total: <b id="total">0</b> Bs</p>
+      <a class="wa" id="wa" href="#">Pedir por WhatsApp</a>
+      <p><button type="button" id="close">Cerrar</button></p>
+    </aside>
+    <script src="embed.js"></script>
+    <script>
+      const items = [
+        { name: "Aguayo chico", price: 120, color: "#8c3b2a", cat: "Textil" },
+        { name: "Taza cerámica", price: 85, color: "#c4a574", cat: "Casa" },
+        { name: "Café 250 g", price: 65, color: "#3c2a1e", cat: "Alimentos" },
+        { name: "Manta", price: 280, color: "#5c3d2e", cat: "Textil" },
+        { name: "Collar", price: 95, color: "#d7b07a", cat: "Joyas" },
+        { name: "Cuaderno", price: 40, color: "#11403f", cat: "Casa" },
+      ]
+      let cat = "Todos"
+      const cart = []
+      const cats = ["Todos", ...new Set(items.map((i) => i.cat))]
+      const filters = document.getElementById("filters")
+      cats.forEach((c) => {
+        const b = document.createElement("button")
+        b.textContent = c
+        b.onclick = () => { cat = c; paintFilters(); paintProducts() }
+        filters.appendChild(b)
+      })
+      function paintFilters() {
+        [...filters.children].forEach((b) => b.classList.toggle("on", b.textContent === cat))
+      }
+      function paintProducts() {
+        const root = document.getElementById("products")
+        root.innerHTML = ""
+        items.filter((i) => cat === "Todos" || i.cat === cat).forEach((item) => {
+          const el = document.createElement("article")
+          el.className = "card"
+          el.innerHTML = `<div class="swatch" style="background:${item.color}"></div>
+            <div class="info"><strong>${item.name}</strong><p>${item.price} Bs · ${item.cat}</p></div>
+            <button type="button">Agregar</button>`
+          el.querySelector("button").onclick = () => {
+            const found = cart.find((c) => c.name === item.name)
+            if (found) found.qty += 1
+            else cart.push({ ...item, qty: 1 })
+            paintCart()
+            document.getElementById("drawer").classList.add("open")
+          }
+          root.appendChild(el)
+        })
+      }
+      function paintCart() {
+        const n = cart.reduce((s, i) => s + i.qty, 0)
+        document.getElementById("count").textContent = String(n)
+        const total = cart.reduce((s, i) => s + i.price * i.qty, 0)
+        document.getElementById("total").textContent = String(total)
+        const list = document.getElementById("list")
+        if (!cart.length) {
+          list.innerHTML = `<p class="empty">El carrito está vacío.</p>`
+        } else {
+          list.innerHTML = cart.map((i, idx) => `<div class="line">
+            <span>${i.name} × ${i.qty}</span>
+            <span>${i.price * i.qty} Bs
+              <button type="button" data-i="${idx}">Quitar</button>
+            </span>
+          </div>`).join("")
+          list.querySelectorAll("[data-i]").forEach((b) => {
+            b.onclick = () => { cart.splice(Number(b.dataset.i), 1); paintCart() }
+          })
+        }
+        const lines = cart.map((i) => `${i.qty}× ${i.name}`).join(", ")
+        document.getElementById("wa").href = "https://wa.me/59170000000?text=" + encodeURIComponent("Pedido Andes Market: " + (lines || "vacío") + " — Total " + total + " Bs")
+      }
+      document.getElementById("open").onclick = () => document.getElementById("drawer").classList.add("open")
+      document.getElementById("close").onclick = () => document.getElementById("drawer").classList.remove("open")
+      paintFilters(); paintProducts(); paintCart()
+    </script>
+  </body>
+</html>

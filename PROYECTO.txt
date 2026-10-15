@@ -1,0 +1,143 @@
+# Ofertas Web
+
+Catálogo de servicios de Diego Sarmiento (Santa Cruz de la Sierra). Muestra packs con precio en bolivianos y dólares, extras, ejemplos vivos y una hoja para cotizar. Sirve como vitrina y publicidad: el visitante ve el alcance y puede abrir una demo, no un mockup plano.
+
+Hoy corre en local. Está preparado para publicarse en Netlify como un solo sitio estático. No hay servidor, base de datos ni cuentas de usuario.
+
+## En qué está hecho
+
+Sitio estático. No usa `package.json`, framework ni build.
+
+| Pieza | Rol |
+|---|---|
+| HTML | Páginas del catálogo y cada ejemplo |
+| CSS propio | `assets/css/styles.css` en el catálogo; `ejemplos/demo.css` en las demos |
+| JavaScript propio | Textos, precios, navegación, tema, idioma y cotización |
+| Google Fonts | Fraunces, Outfit e Instrument Serif |
+| Floating UI (CDN) | Solo en `pack.html`, para el tooltip de precios |
+| `localStorage` | Idioma, tema claro/oscuro, y datos de las demos CRUD y ERP en ese navegador |
+
+Idiomas del catálogo: español e inglés. La preferencia queda en el navegador (`ofertas-lang`). El tema usa `ofertas-theme` o, si no hay nada guardado, el del sistema.
+
+Contacto (en `assets/js/config.js`): email y WhatsApp. No hay formulario que guarde datos en un servidor. La cotización se arma en el navegador y se manda por email, WhatsApp o el diálogo de imprimir del navegador (“Guardar como PDF”).
+
+## Cómo está estructurado
+
+```
+ofertas-web/
+  index.html          Inicio: oferta, packs, modificaciones y ejemplos
+  pack.html           Ficha de un pack (?id=pack1, pack3, …)
+  servicios.html      Otros trabajos, fuera de los packs
+  cotizar.html        Hoja de cotización
+  netlify.toml        Publica la carpeta entera; iframes solo del mismo sitio
+  PROYECTO.md         Este documento
+  assets/
+    css/styles.css    Estilos del catálogo
+    img/demos/        Capturas .webp de cada ejemplo (las usan las tarjetas)
+    img/og.png        Imagen que se ve al compartir el enlace
+    js/config.js      Email, WhatsApp, GitHub y LinkedIn
+    js/i18n.js        Textos ES/EN: packs, FAQ, proyectos, sobre mí
+    js/data/catalog.js  Precios, plazos, extras, líneas de packs y servicios
+    js/render/        Un módulo por página o sección
+  favicon.svg
+  robots.txt
+  ejemplos/
+    demo.css          Barra “volver al catálogo” y ajustes si la demo va en iframe
+    extras-panel.js   Panel de extras compartido: interruptores, total, pedido por WhatsApp y vista de celular
+    extras-panel.css  Estilos del panel y de la vista previa
+    img/              Fotos y video de las demos
+    embed.js          Marca la página cuando está dentro de un iframe
+    landing-1.html    Café Barrio
+    landing-3.html    Lucía Mendes
+    web/              Estudio Vargas (carpeta propia; web.html redirige aquí)
+    tienda.html       Andes Market
+    frontend-pro.html Aurea Studio
+    ia.html           Hiland Bot
+    crud.html         Panel Norte
+    erp.html          Taller OS
+    datos.html        Taller en números (dashboard de análisis)
+```
+
+El catálogo pinta solo. Cada HTML trae un header y un footer vacíos; `main.js` los llena según la página y el idioma. Todos los precios viven en `data/catalog.js` y el dólar se calcula con `USD_RATE` (11 Bs); ningún texto lleva un precio escrito a mano. Los textos viven en `i18n.js`.
+
+En la ficha de un pack hay un iframe con la demo y un enlace que abre esa misma demo a pantalla completa. `netlify.toml` deja el iframe solo si catálogo y ejemplos están en el mismo sitio (`X-Frame-Options: SAMEORIGIN`).
+
+## Qué contiene el catálogo
+
+Inicio (`index.html`):
+
+- Hero con oferta de arranque y acceso a cotizar.
+- Oferta de primera compra: las dos landings juntas.
+- Packs agrupados en tres líneas: Webs, Sistemas a medida, Datos e IA.
+- Trabajo real: Vehimac, el caso de análisis del taller y Yachay, con enlaces al código.
+- Sobre mí, con foto, GitHub y LinkedIn.
+- Modificaciones (extras), proceso, tabla comparativa y preguntas frecuentes.
+- Email y WhatsApp.
+
+Ficha (`pack.html?id=…`): nombre, precio, plazo, para quién sirve, cómo se entrega, qué incluye, extras y la demo.
+
+Otros servicios (`servicios.html`): API, mini backend, formulario a Sheets, arreglo de una web ya hecha, mantenimiento, capacitación, frontend extra y hook de IA.
+
+Cotizar (`cotizar.html`): nombre, rubro, local o remoto, pack, extras y plazo. El total se calcula en el navegador. Se puede enviar por email, por WhatsApp o imprimir / guardar como PDF. No se guarda una cotización en ningún servidor.
+
+## Packs
+
+Precios de lista en el catálogo (bolivianos y dólares a 11 Bs).
+
+| Id | Línea | Pack | Precio | Demo |
+|---|---|---|---|---|
+| `bundleLandings` | Webs | 2 landings, primera compra (25% off) | 1.890 Bs (USD 170) | Las dos landings |
+| `pack1` | Webs | Landing 1 sección | 720 Bs (USD 65) | Café Barrio |
+| `pack3` | Webs | Landing 3 secciones | 1.800 Bs (USD 165) | Lucía Mendes |
+| `packWeb` | Webs | Web común | 3.500 Bs (USD 320) | Estudio Vargas |
+| `packShop` | Webs | E-commerce inicial | 8.500 Bs (USD 775) | Andes Market |
+| `packFront` | Webs | Frontend animado | 3.200 Bs (USD 290) | Aurea Studio |
+| `packCrud` | Sistemas | CRUD profesional | 4.800 Bs (USD 435) | Panel Norte |
+| `packErp` | Sistemas | ERP inicial | 15.000 Bs (USD 1.365) | Taller OS |
+| `packData` | Datos e IA | Análisis de datos | 1.500 Bs (USD 135) | Taller en números |
+| `packIA` | Datos e IA | Conexiones con IA | 2.200 Bs (USD 200) | Hiland Bot |
+
+La oferta de arranque junta la landing de 1 sección y la de 3. El precio tachado es la suma real de las dos (720 + 1.800 = 2.520 Bs) y el ahorro que se muestra es 630 Bs.
+
+Los textos del catálogo dicen que un encargo real de sitio iría en Astro o React, y uno de sistema en FastAPI + PostgreSQL. Esas tecnologías no están en este repositorio: aquí solo está la vitrina y las demos.
+
+## Ejemplos
+
+Cada ejemplo es un HTML independiente, con su propio CSS. Las dos landings y la web usan además el panel de extras compartido (`extras-panel.js`): la demo define su página dentro de `#page`, marca con `data-extra="id"` lo que aparece con cada extra y llama a `startExtrasPanel`. Los precios salen de `assets/js/data/catalog.js`. Aceptan `?extras=id,id&device=phone&panel=0` para abrirse ya configuradas. Se abre solo (`/ejemplos/tienda.html`) o dentro del iframe de la ficha. Una barra superior vuelve al catálogo. No comparten el CSS del catálogo.
+
+Ningún ejemplo llama a un API real. No hay pagos, login ni base de datos.
+
+| Archivo | Marca | Qué se puede hacer |
+|---|---|---|
+| `landing-1.html` | Café Barrio | La landing en estado base y el panel de extras: cada uno de los 8 extras del pack cambia la página al activarlo (sección extra, texto profesional, mapa, botón de llamada, horario, animación) o muestra su efecto en el panel (pixel, vista previa de WhatsApp). |
+| `landing-3.html` | Lucía Mendes | Inicio, servicios y contacto, con el mismo panel: sección extra, formulario que muestra el correo que llegaría, selector ES/EN que traduce todo el sitio, galería, testimonios, calendario de citas, video de fondo y comparación de resultado en Google. |
+| `web/` | Estudio Vargas | Web de negocio en su propia carpeta (`index.html`, `web.css`, `web.js`, `img/`): inicio, servicios, nosotros, cifras y contacto con formulario. Usa GSAP + ScrollTrigger (entrada, contadores, parallax), Lenis (scroll suave) y Swiper (carrusel) por CDN, y el panel con los 9 extras del pack: página de planes, blog con lector, selector ES/EN, panel para editar textos en la página, dominio, WhatsApp flotante, mapa, modo oscuro y carrusel de trabajos. `web.html` solo redirige a la carpeta. |
+| `tienda.html` | Andes Market | Productos de ejemplo en el propio archivo, filtros, carrito y un enlace de pedido por WhatsApp. El carrito se pierde al recargar. |
+| `frontend-pro.html` | Aurea Studio | Home con tipografía, motion y secciones. No hay backend. |
+| `ia.html` | Hiland Bot | Chat con respuestas escritas en la página (stock, horario, proforma). Muestra un JSON de ejemplo de `POST /ai/chat`. No usa Groq, OpenAI ni WhatsApp. |
+| `crud.html` | Panel Norte | Clientes e inventario: alta, edición, baja y búsqueda. Los datos quedan en `localStorage` de ese navegador. |
+| `erp.html` | Taller OS | Tablero de órdenes que se mueven de columna y una vista de finanzas. Las órdenes quedan en `localStorage`. |
+| `datos.html` | Taller en números | KPIs, gráfico de ingresos y egresos con vista de tabla, egresos por rubro y recomendaciones calculadas sobre 12 semanas de datos de práctica. |
+
+Estas demos están para enseñar el tipo de trabajo. Un CRUD, un ERP o un bot de un cliente de verdad necesitan su propio servidor y se encienden cuando hay un encargo, no en esta vitrina.
+
+## Dónde corre
+
+Local. Desde la carpeta del proyecto:
+
+```bash
+python -m http.server 4174
+```
+
+Abrir `http://127.0.0.1:4174`.
+
+`npm run dev` no aplica: no hay `package.json`.
+
+Netlify: `netlify.toml` publica la raíz (`.`). Un deploy sube el catálogo y los nueve ejemplos juntos. El plan de sitios estáticos alcanza. No hace falta un plan de pago ni un backend de prueba para que la vitrina siga en línea.
+
+Lo que no vive aquí, ni en Netlify como producto real: contraseñas, PostgreSQL, claves de IA, cobro con tarjeta y WhatsApp Business. Eso pertenece al proyecto del cliente cuando esté pagado.
+
+## Pendiente al publicar
+
+- `og:image` usa una ruta relativa. Con el dominio definitivo hay que ponerla absoluta en los cuatro HTML (`https://tu-dominio/assets/img/og.png`) para que WhatsApp muestre la vista previa, y agregar `<link rel="canonical">` y un `sitemap.xml`.
+- Si cambia el diseño de una demo, hay que volver a sacar su captura en `assets/img/demos/`.
