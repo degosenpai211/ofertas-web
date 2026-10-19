@@ -137,7 +137,10 @@ Netlify: `netlify.toml` publica la raíz (`.`). Un deploy sube el catálogo y lo
 
 Lo que no vive aquí, ni en Netlify como producto real: contraseñas, PostgreSQL, claves de IA, cobro con tarjeta y WhatsApp Business. Eso pertenece al proyecto del cliente cuando esté pagado.
 
-## Pendiente al publicar
+## Publicación
 
-- `og:image` usa una ruta relativa. Con el dominio definitivo hay que ponerla absoluta en los cuatro HTML (`https://tu-dominio/assets/img/og.png`) para que WhatsApp muestre la vista previa, y agregar `<link rel="canonical">` y un `sitemap.xml`.
-- Si cambia el diseño de una demo, hay que volver a sacar su captura en `assets/img/demos/`.
+En línea en `https://ofertas-web-diego.netlify.app` (proyecto `ofertas-web-diego` en Netlify).
+
+Los cuatro HTML llevan `og:url`, `og:image` y `twitter:image` con la URL completa, más `<link rel="canonical">`. Hay un `sitemap.xml` y `robots.txt` lo enlaza. Si cambia el dominio, hay que reemplazar `https://ofertas-web-diego.netlify.app` en esos cinco archivos y en el JSON-LD de `index.html`.
+
+Capturas de `assets/img/demos/`: 960×600 en `.webp`, tomadas con Chrome sin ventana a escala 2, con la demo dentro de un iframe (así se oculta la barra de “volver”) y `?panel=0` para que el panel de extras salga cerrado. Si cambia el diseño de una demo, hay que volver a sacarla.

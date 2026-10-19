@@ -48,8 +48,6 @@ export const I18N = {
         title: "Vehimac — ERP de un taller",
         text: "API con FastAPI y PostgreSQL para un taller en Bolivia: órdenes de trabajo, proformas, salarios y estado de resultados. Kanban de órdenes, migraciones SQL y documentación en /docs.",
         tags: ["FastAPI", "PostgreSQL", "React"],
-        code: "https://github.com/degosenpai211/Vehimac",
-        live: "https://vehimac-production-9609.up.railway.app/docs",
       },
       {
         role: "Datos · caso de análisis",
@@ -438,8 +436,6 @@ export const I18N = {
         title: "Vehimac — workshop ERP",
         text: "FastAPI and PostgreSQL API for a workshop in Bolivia: work orders, quotes, salaries and an income statement. Order Kanban, SQL migrations and docs at /docs.",
         tags: ["FastAPI", "PostgreSQL", "React"],
-        code: "https://github.com/degosenpai211/Vehimac",
-        live: "https://vehimac-production-9609.up.railway.app/docs",
       },
       {
         role: "Data · analysis case",
