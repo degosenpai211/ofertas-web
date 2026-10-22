@@ -1,6 +1,6 @@
 import { CONTACT } from "../config.js"
 import { mailHref, waHref } from "../core/contact.js"
-import { formatBs, formatDays, formatPricePair, formatUsd, toUsd } from "../core/format.js"
+import { formatDays, formatPackPricePair, formatPricePair } from "../core/format.js"
 import { getLang, SUPPORTED_LANGS } from "../core/preferences.js"
 import { readQuotePackParam } from "../core/routes.js"
 import { dict, fillTemplate } from "../core/text.js"
@@ -83,12 +83,14 @@ function buildQuote(form) {
     pack,
     extras,
     totalBs: pricedItems.reduce((sum, item) => sum + item.priceBs, 0),
-    totalUsd: pricedItems.reduce((sum, item) => sum + toUsd(item.priceBs), 0),
+    totalMaxBs: pricedItems.reduce((sum, item) => sum + (item.priceMaxBs ?? item.priceBs), 0),
   }
 }
 
+// Con un pack conversable el total también es un rango; si no, min y max coinciden y sale un solo precio.
 function formatQuoteTotal(quote) {
-  return `${formatBs(quote.totalBs)} (${formatUsd(quote.totalUsd)})`
+  const maxBs = quote.totalMaxBs > quote.totalBs ? quote.totalMaxBs : undefined
+  return formatPackPricePair({ priceBs: quote.totalBs, priceMaxBs: maxBs })
 }
 
 function quoteExtrasText(extras) {
@@ -106,7 +108,7 @@ function quoteMessage(quote) {
     `${t.quoteIndustry}: ${quote.industry}`,
     `${t.quoteScope}: ${scopeLabel}`,
     `${t.quoteLang}: ${quote.projectLang.toUpperCase()}`,
-    `${t.quotePack}: ${t[quote.pack.id].name} — ${formatPricePair(quote.pack.priceBs)}`,
+    `${t.quotePack}: ${t[quote.pack.id].name} — ${formatPackPricePair(quote.pack)}`,
     `${t.quoteExtras}:`,
     quoteExtrasText(quote.extras),
     `${t.quoteTotal}: ${formatQuoteTotal(quote)}`,
@@ -169,7 +171,7 @@ function packOptionMarkup(packId) {
     name: "pack",
     value: packId,
     title: t[packId].name,
-    meta: `${oldPrice}${formatPricePair(pack.priceBs)} · ${formatDays(pack.days, t.daysUnit)}`,
+    meta: `${oldPrice}${formatPackPricePair(pack)} · ${formatDays(pack.days, t.daysUnit)}`,
   })
 }
 

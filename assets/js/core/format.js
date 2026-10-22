@@ -32,6 +32,21 @@ export function formatPricePair(amountBs) {
   return `${formatBs(amountBs)} (${formatUsd(toUsd(amountBs))})`
 }
 
+// Un pack con priceMaxBs se muestra como rango conversable; el resto, como precio cerrado.
+export function formatBsRange(minBs, maxBs) {
+  if (!maxBs) return formatBs(minBs)
+  return `${formatNumber(minBs)}–${formatBs(maxBs)}`
+}
+
+export function formatUsdRange(minBs, maxBs) {
+  if (!maxBs) return formatUsd(toUsd(minBs))
+  return `${USD_LABEL} ${formatNumber(toUsd(minBs))}–${formatNumber(toUsd(maxBs))}`
+}
+
+export function formatPackPricePair(pack) {
+  return `${formatBsRange(pack.priceBs, pack.priceMaxBs)} (${formatUsdRange(pack.priceBs, pack.priceMaxBs)})`
+}
+
 export function formatDays(days, unit) {
   return `${days.min}–${days.max} ${unit}`
 }

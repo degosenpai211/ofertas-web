@@ -36,7 +36,7 @@ function summaryMarkup(pack, text) {
     <h1 class="pack-title">${text.name}</h1>
     <p class="pack-price-row">
       ${oldPrice}
-      <span class="price-main">${renderCountedBs(pack.priceBs)}</span>
+      <span class="price-main">${renderCountedBs(pack.priceBs, pack.priceMaxBs)}</span>
       <span class="price-meta">${renderUsdAndDays(pack)}</span>
     </p>
     <p class="section-lead">${withPrices(text.blurb)}</p>

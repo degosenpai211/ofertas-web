@@ -177,18 +177,20 @@ export const PACKS = [
   {
     id: "packErp",
     category: "systems",
-    priceBs: 15000,
-    days: { min: 34, max: 56 },
+    // Precio conversable: se muestra como rango y la cotización suma el rango completo.
+    priceBs: 6800,
+    priceMaxBs: 8500,
+    days: { min: 18, max: 29 },
     featured: false,
     demos: [DEMOS.erp],
     extras: [
-      { id: "extraModule", priceBs: 2500 },
-      { id: "loginRoles", priceBs: 1200 },
-      { id: "reports", priceBs: 800 },
-      { id: "whatsappFromOrder", priceBs: 600 },
-      { id: "partsAlerts", priceBs: 450 },
-      { id: "pwa", priceBs: 600 },
-      { id: "secondBranch", priceBs: 1800 },
+      { id: "extraModule", priceBs: 2250 },
+      { id: "loginRoles", priceBs: 1080 },
+      { id: "reports", priceBs: 720 },
+      { id: "whatsappFromOrder", priceBs: 540 },
+      { id: "partsAlerts", priceBs: 405 },
+      { id: "pwa", priceBs: 540 },
+      { id: "secondBranch", priceBs: 1620 },
     ],
   },
 ]
@@ -231,7 +233,7 @@ export const QUOTE_EXTRAS = [
   { id: "api", priceBs: 500 },
   { id: "dashboard", priceBs: 1500 },
   { id: "aiHook", priceBs: 900 },
-  { id: "erpModule", priceBs: 2500 },
+  { id: "erpModule", priceBs: 2250 },
   { id: "crudResource", priceBs: 1100 },
   { id: "maintenance", priceBs: 280 },
 ]

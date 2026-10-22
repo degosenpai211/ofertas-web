@@ -1,4 +1,4 @@
-import { formatBs, formatDays, formatUsd, toUsd } from "../core/format.js"
+import { formatBs, formatBsRange, formatDays, formatUsdRange } from "../core/format.js"
 import { bundleSavingsBs, withPrices } from "../core/pricing.js"
 import { packHref } from "../core/routes.js"
 import { dict, fillTemplate } from "../core/text.js"
@@ -37,8 +37,8 @@ const COMPARE_COLUMNS = [
     isRowHeader: true,
     cell: (pack, t) => `${t[pack.id].name}${pack.featured ? ` <span class="badge">${t.featuredBadge}</span>` : ""}`,
   },
-  { labelKey: "comparePrice", isNumeric: true, cell: (pack) => formatBs(pack.priceBs) },
-  { labelKey: "compareUsd", isNumeric: true, cell: (pack) => formatUsd(toUsd(pack.priceBs)) },
+  { labelKey: "comparePrice", isNumeric: true, cell: (pack) => formatBsRange(pack.priceBs, pack.priceMaxBs) },
+  { labelKey: "compareUsd", isNumeric: true, cell: (pack) => formatUsdRange(pack.priceBs, pack.priceMaxBs) },
   { labelKey: "compareDays", cell: (pack, t) => formatDays(pack.days, t.daysUnit) },
   { labelKey: "compareExtras", isNumeric: true, cell: (pack) => String(pack.extras.length) },
   {
@@ -88,7 +88,7 @@ function packCardMarkup(pack) {
     title: text.name,
     isFeatured: pack.featured,
     linkLabel: t.seePack,
-    content: `<p class="price-main">${renderCountedBs(pack.priceBs)}</p>
+    content: `<p class="price-main">${renderCountedBs(pack.priceBs, pack.priceMaxBs)}</p>
       <p class="price-meta">${renderUsdAndDays(pack)}</p>
       <p class="card-text">${withPrices(text.blurb)}</p>`,
   })

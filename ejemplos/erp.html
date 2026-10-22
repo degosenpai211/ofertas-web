@@ -6,106 +6,839 @@
     <meta name="robots" content="noindex" />
     <title>Taller OS — ERP</title>
     <link rel="stylesheet" href="demo.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
-      body { margin:0; font-family:Outfit,sans-serif; background:#eef1f4; color:#12202c; }
-      .app { display:grid; grid-template-columns:200px 1fr; min-height:calc(100vh - 36px); }
-      aside { background:#12202c; color:#d7e1ea; padding:18px 14px; }
-      aside button { display:block; width:100%; text-align:left; background:transparent; border:0; color:#9fb1c2; padding:8px 0; cursor:pointer; font:inherit; }
-      aside button.on { color:#fff; }
-      main { padding:20px; }
-      .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
-      .kpi { background:#fff; border-radius:12px; padding:14px; }
-      .kpi b { font-size:1.35rem; display:block; }
-      .board { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:18px; }
-      .col { background:#fff; border-radius:12px; padding:10px; min-height:260px; }
-      .col h3 { margin:0 0 8px; font-size:13px; color:#5b6b78; }
-      .ot { background:#eef1f4; border-radius:10px; padding:10px; margin-bottom:8px; font-size:14px; }
-      .ot button { margin-top:6px; margin-right:4px; font-size:12px; }
-      table { width:100%; border-collapse:collapse; background:#fff; margin-top:18px; border-radius:12px; overflow:hidden; }
-      td, th { padding:10px 12px; text-align:left; border-bottom:1px solid #e6ebf0; font-size:14px; }
-      @media (max-width:800px) { .app, .board { grid-template-columns:1fr; } }
+      :root {
+        --ink: #12202c;
+        --ink-soft: #5b6b78;
+        --ink-faint: #8a98a4;
+        --bg: #f3f5f7;
+        --card: #ffffff;
+        --line: #e4e9ee;
+        --side: #12202c;
+        --side-ink: #9fb1c2;
+        --accent: #2f6fd6;
+        --accent-soft: #e8f0fc;
+        --in: #1f8a5b;
+        --out: #d0532f;
+        --warn: #b7791f;
+        --radius: 12px;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Outfit, system-ui, sans-serif; background: var(--bg); color: var(--ink); font-size: 14px; }
+      button, input, select, textarea { font: inherit; color: inherit; }
+      a { color: inherit; }
+      .app { display: grid; grid-template-columns: 210px 1fr; min-height: calc(100vh - 36px); }
+      html.in-iframe .app { min-height: 100vh; }
+
+      .side { background: var(--side); color: var(--side-ink); padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+      .brand { color: #fff; font-weight: 600; font-size: 16px; padding: 0 10px 18px; display: flex; align-items: center; gap: 8px; }
+      .brand i { width: 26px; height: 26px; border-radius: 8px; background: var(--accent); display: grid; place-items: center; font-style: normal; font-size: 12px; }
+      .nav a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; text-decoration: none; color: var(--side-ink); }
+      .nav a:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+      .nav a.on { color: #fff; background: rgba(255, 255, 255, 0.09); }
+      .nav svg { width: 17px; height: 17px; flex: none; }
+      .side-foot { margin-top: auto; font-size: 12px; padding: 0 10px; line-height: 1.5; }
+      .side-foot button { background: none; border: 1px solid rgba(255, 255, 255, 0.15); color: var(--side-ink); border-radius: 8px; padding: 6px 10px; cursor: pointer; margin-top: 8px; }
+      .side-foot button:hover { color: #fff; }
+      .live { display: inline-flex; align-items: center; gap: 6px; }
+      .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #3ccf8e; box-shadow: 0 0 0 3px rgba(60, 207, 142, 0.2); }
+
+      main { padding: 26px 30px 40px; min-width: 0; }
+      .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+      h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+      .sub { margin: 4px 0 0; color: var(--ink-soft); }
+      h2 { margin: 0 0 12px; font-size: 15px; font-weight: 600; }
+      .back { display: inline-flex; gap: 6px; color: var(--ink-soft); text-decoration: none; margin-bottom: 8px; font-size: 13px; }
+      .back:hover { color: var(--ink); }
+
+      .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+      .grid { display: grid; gap: 14px; }
+      .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 14px; }
+      .kpi span { color: var(--ink-soft); font-size: 13px; }
+      .kpi b { display: block; font-size: 22px; font-weight: 600; margin-top: 6px; font-variant-numeric: tabular-nums; }
+      .kpi small { color: var(--ink-faint); }
+      .two { grid-template-columns: 1.6fr 1fr; align-items: start; }
+      .two-even { grid-template-columns: 1fr 1fr; align-items: start; }
+
+      .btn { border: 1px solid var(--line); background: var(--card); border-radius: 9px; padding: 8px 14px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+      .btn:hover { border-color: #c9d2db; }
+      .btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+      .btn.primary:hover { background: #22364a; }
+      .btn.danger { color: var(--out); }
+      .btn.sm { padding: 5px 10px; font-size: 13px; }
+      .btn:disabled { opacity: 0.45; cursor: default; }
+      .tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      .search { border: 1px solid var(--line); background: var(--card); border-radius: 9px; padding: 8px 12px; min-width: 220px; }
+
+      .table-wrap { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: auto; }
+      table { width: 100%; border-collapse: collapse; }
+      th { text-align: left; font-weight: 500; color: var(--ink-soft); font-size: 12.5px; padding: 11px 14px; border-bottom: 1px solid var(--line); background: #fafbfc; white-space: nowrap; }
+      td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      tr:last-child td { border-bottom: 0; }
+      tbody tr.link { cursor: pointer; }
+      tbody tr.link:hover { background: #f8fafb; }
+      .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .muted { color: var(--ink-soft); }
+      .faint { color: var(--ink-faint); font-size: 12.5px; }
+      .empty { padding: 26px; text-align: center; color: var(--ink-faint); }
+
+      .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+      .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+      .s-pendiente { background: #fdf3e2; color: #9a6513; }
+      .s-en_camino { background: var(--accent-soft); color: #23589f; }
+      .s-recibido { background: #efe9fb; color: #6a46b5; }
+      .s-entregado { background: #e5f4ec; color: #1f7a50; }
+
+      .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+      .chip { border: 1px solid var(--line); background: var(--card); border-radius: 99px; padding: 6px 12px; cursor: pointer; font-size: 13px; }
+      .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+      .chip b { font-weight: 500; opacity: 0.6; margin-left: 4px; }
+
+      .list { display: flex; flex-direction: column; }
+      .list a, .list div.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+      .list > :last-child { border-bottom: 0; }
+      .list a:hover strong { color: var(--accent); }
+      .list strong { font-weight: 500; }
+
+      form.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .field { display: flex; flex-direction: column; gap: 6px; }
+      .field.full { grid-column: 1 / -1; }
+      .field label { font-size: 12.5px; color: var(--ink-soft); }
+      .field input, .field select, .field textarea { border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; background: #fff; width: 100%; }
+      .field textarea { min-height: 70px; resize: vertical; }
+      .field input:focus, .field select:focus, .field textarea:focus, .search:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+      .actions { grid-column: 1 / -1; display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; padding-top: 4px; }
+      .dirty { color: var(--warn); font-size: 13px; align-self: center; }
+
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+      .stat { background: var(--bg); border-radius: 10px; padding: 10px 12px; }
+      .stat span { font-size: 12px; color: var(--ink-soft); }
+      .stat b { display: block; font-size: 16px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+      .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
+      .step { border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 10px; text-align: left; cursor: pointer; }
+      .step small { display: block; color: var(--ink-faint); font-size: 11.5px; }
+      .step.done { background: #f6f9fc; }
+      .step.now { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+      .margin-box { display: flex; justify-content: space-between; background: var(--bg); border-radius: 10px; padding: 12px 14px; grid-column: 1 / -1; font-variant-numeric: tabular-nums; }
+      .pay { display: flex; gap: 8px; margin-top: 12px; }
+      .pay input { flex: 1; border: 1px solid var(--line); border-radius: 9px; padding: 8px 11px; min-width: 0; }
+      .bar-track { height: 8px; border-radius: 99px; background: var(--bg); overflow: hidden; margin-top: 8px; }
+      .bar-fill { height: 100%; background: var(--in); border-radius: 99px; transition: width 0.4s ease; }
+
+      .chart { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; align-items: end; height: 190px; padding-top: 10px; }
+      .week { display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; }
+      .bars { flex: 1; display: flex; align-items: flex-end; gap: 4px; width: 100%; justify-content: center; }
+      .bars i { width: 16px; border-radius: 5px 5px 0 0; transition: height 0.5s ease; min-height: 2px; }
+      .bars i.in { background: var(--in); }
+      .bars i.out { background: var(--out); opacity: 0.85; }
+      .week small { color: var(--ink-faint); font-size: 11.5px; }
+      .legend { display: flex; gap: 14px; font-size: 12.5px; color: var(--ink-soft); }
+      .legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+      .legend .l-in::before { background: var(--in); }
+      .legend .l-out::before { background: var(--out); }
+      .cat { margin-bottom: 12px; }
+      .cat div:first-child { display: flex; justify-content: space-between; font-size: 13px; }
+      .cat .bar-fill { background: var(--out); opacity: 0.8; }
+      .amt-in { color: var(--in); }
+      .amt-out { color: var(--out); }
+
+      .flash { animation: flash 1.8s ease; }
+      @keyframes flash { 0%, 30% { background: #fff6d6; } 100% { background: transparent; } }
+      .card.flash { animation: flash-card 1.8s ease; }
+      @keyframes flash-card { 0%, 30% { box-shadow: 0 0 0 3px #f3dc8a; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+      .toast { position: fixed; right: 20px; bottom: 20px; background: var(--ink); color: #fff; padding: 11px 16px; border-radius: 10px; font-size: 13.5px; opacity: 0; transform: translateY(8px); transition: 0.25s ease; pointer-events: none; z-index: 50; }
+      .toast.show { opacity: 1; transform: none; }
+
+      @media (max-width: 980px) {
+        .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .two, .two-even { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 760px) {
+        .app { grid-template-columns: 1fr; }
+        .side { position: static; height: auto; flex-direction: row; align-items: center; overflow-x: auto; padding: 10px 12px; gap: 2px; }
+        .brand { padding: 0 10px 0 0; }
+        .nav { display: flex; }
+        .nav a span { display: none; }
+        .side-foot { display: none; }
+        main { padding: 18px 16px 32px; }
+        .search { min-width: 0; flex: 1; }
+        form.fields, .stats { grid-template-columns: 1fr; }
+        .steps { grid-template-columns: repeat(2, 1fr); }
+        .hide-sm { display: none; }
+        .chart { gap: 6px; }
+        .bars i { width: 11px; }
+      }
     </style>
   </head>
   <body>
-    <div class="demo"><span>Ejemplo · ERP · 15.000 Bs (USD 1.365) · mueve las OT de columna</span><a href="../index.html">Volver al catálogo</a></div>
+    <div class="demo"><span>Ejemplo · ERP · 6.800–8.500 Bs (USD 620–775) · edita clientes, pedidos y finanzas</span><a href="../index.html">Volver al catálogo</a></div>
     <div class="app">
-      <aside>
-        <strong>Taller OS</strong>
-        <button class="on" data-view="panel" type="button">Panel</button>
-        <button data-view="finanzas" type="button">Finanzas</button>
+      <aside class="side">
+        <div class="brand"><i>OS</i>Taller OS</div>
+        <nav class="nav" id="nav" aria-label="Secciones">
+          <a href="#/inicio" data-section="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg><span>Inicio</span></a>
+          <a href="#/clientes" data-section="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5" /><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18.5 14.8c1.6.8 2.6 2.5 3 5.2" /></svg><span>Clientes</span></a>
+          <a href="#/pedidos" data-section="pedidos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z" /><path d="M3 8v8l9 5 9-5V8" /><path d="M12 13v8" /></svg><span>Pedidos de repuestos</span></a>
+          <a href="#/finanzas" data-section="finanzas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></svg><span>Finanzas</span></a>
+        </nav>
+        <div class="side-foot">
+          <span class="live">Datos al día</span><br />
+          Se guardan en este navegador.
+          <br /><button type="button" id="reset">Reiniciar demo</button>
+        </div>
       </aside>
-      <main>
-        <div id="panel">
-          <h1>Hoy</h1>
-          <div class="kpis">
-            <div class="kpi"><span>En proceso</span><b id="k-proc">0</b></div>
-            <div class="kpi"><span>Sin recoger</span><b id="k-term">0</b></div>
-            <div class="kpi"><span>Entregadas</span><b id="k-ent">0</b></div>
-            <div class="kpi"><span>Ingresos semana</span><b>11.100 Bs</b></div>
-          </div>
-          <div class="board" id="board"></div>
-        </div>
-        <div id="finanzas" hidden>
-          <h1>Finanzas</h1>
-          <table>
-            <thead><tr><th>Rubro</th><th>Bs</th></tr></thead>
-            <tbody>
-              <tr><td>Ingresos por servicios</td><td>11.100</td></tr>
-              <tr><td>Filamento</td><td>2.400</td></tr>
-              <tr><td>Sueldos</td><td>3.200</td></tr>
-              <tr><td>Margen</td><td>5.500</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
+      <main id="view"></main>
     </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="embed.js"></script>
     <script>
-      const cols = ["en_proceso", "terminado", "entregado"]
-      const labels = { en_proceso: "En proceso", terminado: "Terminado (sin recoger)", entregado: "Entregado" }
-      let ots = JSON.parse(localStorage.getItem("taller-ots") || "null") || [
-        { id: "104", auto: "Toyota Hilux", step: "Soldadura", status: "en_proceso" },
-        { id: "107", auto: "Suzuki", step: "Pintura", status: "en_proceso" },
-        { id: "101", auto: "Nissan", step: "Lista", status: "terminado" },
-        { id: "099", auto: "Mazda", step: "Lista", status: "terminado" },
-        { id: "098", auto: "Ford", step: "Cobrado", status: "entregado" },
+      const STORAGE_KEY = "taller-os-v2"
+      const STATUSES = ["pendiente", "en_camino", "recibido", "entregado"]
+      const STATUS_LABELS = { pendiente: "Pendiente", en_camino: "En camino", recibido: "Recibido", entregado: "Entregado" }
+      const STATUS_HINTS = { pendiente: "Falta pedirlo", en_camino: "El proveedor lo envía", recibido: "En el taller", entregado: "En manos del cliente" }
+      const SUPPLIERS = ["Importadora Andina", "Repuestos El Trompillo", "AutoPartes Cruceña", "Toyota Parts SCZ"]
+      const OUT_CATEGORIES = ["Compra de repuestos", "Alquiler", "Servicios básicos", "Fletes", "Otros"]
+      const IN_CATEGORIES = ["Pago de pedido", "Venta de mostrador", "Otros"]
+      const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+      const WEEKS_IN_CHART = 6
+      const RECENT_COUNT = 5
+      const ACTIVITY_COUNT = 6
+      const MOVES_SHOWN = 14
+      const FLASH_MS = 1900
+
+      // ---------- utilidades ----------
+      const $ = (selector, root = document) => root.querySelector(selector)
+      const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c])
+      const money = (n) => `${Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} Bs`
+      const isoDay = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+      const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d }
+      const shiftDays = (days) => { const d = today(); d.setDate(d.getDate() + days); return isoDay(d) }
+      const parseDay = (iso) => { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d) }
+      const shortDate = (iso) => { const d = parseDay(iso); return `${d.getDate()} ${MONTHS[d.getMonth()]}` }
+      const daysFromToday = (iso) => Math.round((parseDay(iso) - today()) / 86400000)
+      function ago(ms) {
+        const minutes = Math.floor((Date.now() - ms) / 60000)
+        if (minutes < 1) return "hace un momento"
+        if (minutes < 60) return `hace ${minutes} min`
+        const hours = Math.floor(minutes / 60)
+        if (hours < 24) return `hace ${hours} h`
+        return shortDate(isoDay(new Date(ms)))
+      }
+
+      // ---------- datos de ejemplo ----------
+      const SEED_CLIENTS = [
+        ["Carla Méndez", "71000001", "6234567", "carla.mendez@gmail.com", "Equipetrol", "Toyota Hilux 2018", "2345-KTD"],
+        ["Taller Sur", "71000002", "312456023", "taller.sur@hotmail.com", "Av. Santos Dumont", "Varios (taller aliado)", "—"],
+        ["Jorge Rivero", "72145589", "5891204", "jrivero@gmail.com", "Plan 3000", "Nissan Frontier 2016", "3812-PLB"],
+        ["Ana Lucía Paz", "76334120", "7012458", "analu.paz@gmail.com", "Urbarí", "Toyota Corolla 2019", "4120-GHR"],
+        ["Transportes Guapay SRL", "33456721", "1029384021", "flota@guapay.bo", "Parque Industrial", "Hino 300 (flota)", "2891-XZN"],
+        ["Marco Antelo", "70098812", "4890123", "marco.antelo@gmail.com", "Villa 1ro de Mayo", "Mitsubishi L200 2017", "3098-HTS"],
+        ["Rosa Justiniano", "77612034", "6678120", "rosa.just@gmail.com", "Barrio Hamacas", "Kia Sportage 2020", "4562-DFK"],
+        ["Luis Fernando Suárez", "71789045", "5567012", "lf.suarez@gmail.com", "Las Palmas", "VW Amarok 2021", "4890-JKP"],
+        ["Daniela Vaca", "75501298", "8123094", "dani.vaca@gmail.com", "Sirari", "Hyundai Tucson 2019", "4301-BNM"],
+        ["Grupo Norte Logística", "33340912", "2034981026", "compras@gruponorte.bo", "Km 9 al norte", "Isuzu NPR (flota)", "3345-RTW"],
       ]
-      function save() { localStorage.setItem("taller-ots", JSON.stringify(ots)) }
-      function move(id, dir) {
-        const ot = ots.find((o) => o.id === id)
-        const i = cols.indexOf(ot.status) + dir
-        if (i < 0 || i >= cols.length) return
-        ot.status = cols[i]
-        save(); render()
-      }
-      function render() {
-        document.getElementById("k-proc").textContent = ots.filter((o) => o.status === "en_proceso").length
-        document.getElementById("k-term").textContent = ots.filter((o) => o.status === "terminado").length
-        document.getElementById("k-ent").textContent = ots.filter((o) => o.status === "entregado").length
-        document.getElementById("board").innerHTML = cols.map((c) => `<div class="col">
-          <h3>${labels[c]}</h3>
-          ${ots.filter((o) => o.status === c).map((o) => `<div class="ot">
-            OT-${o.id} · ${o.auto}<br />${o.step}
-            <div>
-              <button type="button" data-m="${o.id}" data-d="-1">←</button>
-              <button type="button" data-m="${o.id}" data-d="1">→</button>
-            </div>
-          </div>`).join("")}
-        </div>`).join("")
-      }
-      document.getElementById("board").onclick = (e) => {
-        if (!e.target.dataset.m) return
-        move(e.target.dataset.m, Number(e.target.dataset.d))
-      }
-      document.querySelectorAll("aside button").forEach((b) => {
-        b.onclick = () => {
-          document.querySelectorAll("aside button").forEach((x) => x.classList.remove("on"))
-          b.classList.add("on")
-          document.getElementById("panel").hidden = b.dataset.view !== "panel"
-          document.getElementById("finanzas").hidden = b.dataset.view !== "finanzas"
+      // [cliente, repuesto, proveedor, costo, precio, pagado, estado, creado hace N días, llega en N días]
+      const SEED_ORDERS = [
+        [0, "Pastillas de freno delanteras", 0, 280, 420, 420, "entregado", 38, -35],
+        [1, "Kit de embrague", 2, 1450, 2100, 2100, "entregado", 35, -31],
+        [4, "Alternador 24V", 1, 1900, 2650, 1300, "entregado", 31, -27],
+        [2, "Amortiguadores traseros (par)", 2, 820, 1180, 1180, "entregado", 27, -23],
+        [5, "Bomba de agua", 0, 390, 590, 590, "entregado", 22, -19],
+        [3, "Correa de distribución + tensor", 3, 610, 880, 880, "entregado", 18, -15],
+        [9, "Radiador", 1, 1750, 2400, 1200, "recibido", 14, -2],
+        [6, "Faro delantero izquierdo", 2, 690, 980, 500, "recibido", 11, -1],
+        [7, "Discos de freno (par)", 0, 760, 1090, 0, "recibido", 9, -1],
+        [8, "Sensor de oxígeno", 3, 540, 790, 400, "en_camino", 7, 2],
+        [1, "Batería 12V 75Ah", 1, 780, 1050, 1050, "en_camino", 5, 1],
+        [4, "Filtros de aceite, aire y combustible", 2, 340, 520, 260, "en_camino", 4, 3],
+        [0, "Termostato", 0, 180, 290, 0, "pendiente", 2, 6],
+        [2, "Bujías (juego de 4)", 2, 210, 330, 150, "pendiente", 1, 5],
+        [9, "Kit de embrague", 1, 1600, 2350, 0, "pendiente", 0, 7],
+      ]
+      const FIRST_ORDER_NUMBER = 141
+
+      function seed() {
+        const clients = SEED_CLIENTS.map(([name, phone, nit, email, zone, vehicle, plate], i) => ({
+          id: `c${i + 1}`, name, phone, nit, email, zone, vehicle, plate, notes: "", since: shiftDays(-120 - i * 9),
+        }))
+        const moves = []
+        let moveSeq = 0
+        const addMove = (move) => moves.push({ id: `m${++moveSeq}`, ...move })
+        const orders = SEED_ORDERS.map(([client, part, supplier, cost, price, paid, status, created, eta], i) => {
+          const order = {
+            id: `p${i + 1}`, num: FIRST_ORDER_NUMBER + i, clientId: clients[client].id, vehicle: clients[client].vehicle,
+            part, supplier: SUPPLIERS[supplier], cost, price, paid, status, created: shiftDays(-created), eta: shiftDays(eta),
+            notes: "", costBooked: status === "recibido" || status === "entregado",
+          }
+          const label = `P-${order.num}`
+          if (paid >= price && status === "entregado") {
+            const advance = Math.round(price / 2)
+            addMove({ date: shiftDays(-created), type: "in", category: "Pago de pedido", concept: `Anticipo ${label}`, amount: advance, orderId: order.id })
+            addMove({ date: shiftDays(Math.min(eta, 0)), type: "in", category: "Pago de pedido", concept: `Saldo ${label}`, amount: price - advance, orderId: order.id })
+          } else if (paid > 0) {
+            addMove({ date: shiftDays(-created), type: "in", category: "Pago de pedido", concept: `Anticipo ${label}`, amount: paid, orderId: order.id })
+          }
+          if (order.costBooked) {
+            addMove({ date: shiftDays(Math.min(eta, 0)), type: "out", category: "Compra de repuestos", concept: `${part} · ${order.supplier}`, amount: cost, orderId: order.id })
+          }
+          return order
+        })
+        const counterSales = [1850, 2240, 1620, 2480, 1930, 1210]
+        counterSales.forEach((amount, week) => addMove({ date: shiftDays(-week * 7 - 1), type: "in", category: "Venta de mostrador", concept: "Ventas de mostrador de la semana", amount }))
+        ;[0, -1].forEach((monthOffset) => {
+          const firstDay = today(); firstDay.setDate(1); firstDay.setMonth(firstDay.getMonth() + monthOffset)
+          addMove({ date: isoDay(firstDay), type: "out", category: "Alquiler", concept: "Alquiler del local", amount: 1500 })
+        })
+        ;[[-6, 240], [-36, 230]].forEach(([day, amount]) => addMove({ date: shiftDays(day), type: "out", category: "Servicios básicos", concept: "Luz, agua e internet", amount }))
+        ;[[-4, 80], [-12, 60], [-19, 90], [-29, 70]].forEach(([day, amount]) => addMove({ date: shiftDays(day), type: "out", category: "Fletes", concept: "Flete de repuestos", amount }))
+        const now = Date.now()
+        return {
+          clients, orders, moves,
+          seq: { client: clients.length, order: FIRST_ORDER_NUMBER + orders.length - 1, move: moveSeq },
+          activity: [
+            { at: now - 3 * 60000, text: "Llegó el pedido P-149 (Discos de freno)" },
+            { at: now - 26 * 60000, text: "Anticipo de 150 Bs en P-154" },
+            { at: now - 95 * 60000, text: "Nuevo pedido P-155 para Grupo Norte Logística" },
+          ],
         }
+      }
+
+      // ---------- estado y guardado ----------
+      let db = load()
+      let flashKey = ""
+      let ui = { clientQuery: "", orderQuery: "", orderStatus: "todos", moveType: "todos" }
+
+      function load() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")
+          if (saved && saved.clients && saved.orders && saved.moves) return saved
+        } catch (error) {}
+        return seed()
+      }
+      function persist() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)) } catch (error) {}
+      }
+      // Cada cambio pasa por aquí: guarda, deja rastro en la actividad, resalta lo editado y vuelve a pintar todo.
+      function commit({ text, flash, toastText }) {
+        if (text) db.activity.unshift({ at: Date.now(), text })
+        db.activity = db.activity.slice(0, 30)
+        persist()
+        flashKey = flash || ""
+        render()
+        toast(toastText || "Guardado")
+        setTimeout(() => { flashKey = "" }, FLASH_MS)
+      }
+      let toastTimer
+      function toast(text) {
+        const el = $("#toast")
+        el.textContent = text
+        el.classList.add("show")
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => el.classList.remove("show"), 2200)
+      }
+      // Otra pestaña con la demo abierta guardó algo: se recarga y se ve al instante.
+      window.addEventListener("storage", (event) => {
+        if (event.key !== STORAGE_KEY) return
+        db = load()
+        render()
+        toast("Actualizado desde otra pestaña")
       })
+
+      // ---------- consultas ----------
+      const clientById = (id) => db.clients.find((c) => c.id === id)
+      const orderById = (id) => db.orders.find((o) => o.id === id)
+      const balance = (order) => Math.max(order.price - order.paid, 0)
+      const ordersOf = (clientId) => db.orders.filter((o) => o.clientId === clientId)
+      const clientBalance = (clientId) => ordersOf(clientId).reduce((sum, o) => sum + balance(o), 0)
+      const sum = (list, pick) => list.reduce((total, item) => total + pick(item), 0)
+      const inThisMonth = (iso) => { const d = parseDay(iso); const t = today(); return d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear() }
+      const flashClass = (key) => (flashKey === key ? " flash" : "")
+      const statusBadge = (status) => `<span class="badge s-${status}">${STATUS_LABELS[status]}</span>`
+      const orderLabel = (order) => `P-${order.num}`
+      function etaText(order) {
+        if (order.status === "entregado") return "Entregado"
+        if (order.status === "recibido") return "En el taller"
+        const days = daysFromToday(order.eta)
+        if (days < 0) return `Atrasado ${-days} d`
+        if (days === 0) return "Llega hoy"
+        if (days === 1) return "Llega mañana"
+        return `Llega ${shortDate(order.eta)}`
+      }
+
+      // ---------- vistas ----------
+      function viewHome() {
+        const active = db.orders.filter((o) => o.status !== "entregado")
+        const owed = sum(db.orders, balance)
+        const monthIn = sum(db.moves.filter((m) => m.type === "in" && inThisMonth(m.date)), (m) => m.amount)
+        const arriving = db.orders.filter((o) => o.status === "en_camino").sort((a, b) => a.eta.localeCompare(b.eta))
+        const ready = db.orders.filter((o) => o.status === "recibido")
+        const recent = [...db.orders].sort((a, b) => b.num - a.num).slice(0, RECENT_COUNT)
+        const hour = new Date().getHours()
+        const greeting = hour < 12 ? "Buenos días" : hour < 19 ? "Buenas tardes" : "Buenas noches"
+        return `
+          <div class="head">
+            <div><h1>${greeting}</h1><p class="sub">${shortDate(isoDay(today()))} · esto es lo que importa hoy.</p></div>
+            <a class="btn primary" href="#/pedidos/nuevo">+ Nuevo pedido</a>
+          </div>
+          <div class="grid kpis">
+            <a class="card kpi" href="#/pedidos" style="text-decoration:none"><span>Pedidos activos</span><b>${active.length}</b><small>${arriving.length} en camino · ${ready.length} por entregar</small></a>
+            <a class="card kpi" href="#/pedidos" style="text-decoration:none"><span>Por cobrar</span><b>${money(owed)}</b><small>${db.orders.filter((o) => balance(o) > 0).length} pedidos con saldo</small></a>
+            <a class="card kpi" href="#/finanzas" style="text-decoration:none"><span>Ingresos del mes</span><b>${money(monthIn)}</b><small>pagos y mostrador</small></a>
+            <a class="card kpi" href="#/clientes" style="text-decoration:none"><span>Clientes</span><b>${db.clients.length}</b><small>en la cartera</small></a>
+          </div>
+          <div class="grid two">
+            <div class="card">
+              <h2>Pedidos recientes</h2>
+              <div class="list">
+                ${recent.map((o) => `<a href="#/pedidos/${o.id}" class="${flashClass(o.id).trim()}">
+                  <span><strong>${esc(o.part)}</strong><br /><span class="faint">${orderLabel(o)} · ${esc(clientById(o.clientId)?.name ?? "Sin cliente")}</span></span>
+                  ${statusBadge(o.status)}
+                </a>`).join("")}
+              </div>
+            </div>
+            <div class="grid">
+              <div class="card">
+                <h2>Por llegar</h2>
+                <div class="list">
+                  ${arriving.length ? arriving.map((o) => `<a href="#/pedidos/${o.id}"><span><strong>${esc(o.part)}</strong><br /><span class="faint">${esc(o.supplier)}</span></span><span class="muted">${etaText(o)}</span></a>`).join("") : `<div class="empty">Nada en camino.</div>`}
+                </div>
+              </div>
+              <div class="card">
+                <h2>Actividad</h2>
+                <div class="list">
+                  ${db.activity.slice(0, ACTIVITY_COUNT).map((a) => `<div class="row"><span>${esc(a.text)}</span><span class="faint" style="white-space:nowrap">${ago(a.at)}</span></div>`).join("")}
+                </div>
+              </div>
+            </div>
+          </div>`
+      }
+
+      function viewClients() {
+        const q = ui.clientQuery.trim().toLowerCase()
+        const rows = db.clients.filter((c) => !q || [c.name, c.phone, c.vehicle, c.plate, c.nit].join(" ").toLowerCase().includes(q))
+        return `
+          <div class="head">
+            <div><h1>Clientes</h1><p class="sub">${db.clients.length} clientes · toca una fila para ver y editar su ficha.</p></div>
+            <div class="tools">
+              <input class="search" id="client-search" type="search" placeholder="Buscar nombre, placa, teléfono…" value="${esc(ui.clientQuery)}" />
+              <a class="btn primary" href="#/clientes/nuevo">+ Nuevo cliente</a>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cliente</th><th class="hide-sm">Teléfono</th><th class="hide-sm">Vehículo</th><th class="num">Pedidos</th><th class="num">Saldo</th><th></th></tr></thead>
+              <tbody>
+                ${rows.map((c) => {
+                  const owed = clientBalance(c.id)
+                  return `<tr class="link${flashClass(c.id)}" data-href="#/clientes/${c.id}">
+                    <td><strong>${esc(c.name)}</strong><br /><span class="faint">${esc(c.zone)}</span></td>
+                    <td class="hide-sm">${esc(c.phone)}</td>
+                    <td class="hide-sm">${esc(c.vehicle)}<br /><span class="faint">${esc(c.plate)}</span></td>
+                    <td class="num">${ordersOf(c.id).length}</td>
+                    <td class="num ${owed ? "amt-out" : "muted"}">${owed ? money(owed) : "—"}</td>
+                    <td class="num"><a class="btn sm" href="#/clientes/${c.id}">Editar</a></td>
+                  </tr>`
+                }).join("") || `<tr><td colspan="6" class="empty">Ningún cliente coincide con “${esc(ui.clientQuery)}”.</td></tr>`}
+              </tbody>
+            </table>
+          </div>`
+      }
+
+      function viewClient(id) {
+        const isNew = id === "nuevo"
+        const c = isNew ? { name: "", phone: "", nit: "", email: "", zone: "", vehicle: "", plate: "", notes: "" } : clientById(id)
+        if (!c) return notFound("Ese cliente ya no existe.", "#/clientes")
+        const orders = isNew ? [] : ordersOf(c.id).sort((a, b) => b.num - a.num)
+        const field = (name, label, type = "text", full = false) => `<div class="field${full ? " full" : ""}"><label for="f-${name}">${label}</label><input id="f-${name}" name="${name}" type="${type}" value="${esc(c[name])}" ${name === "name" ? "required" : ""} /></div>`
+        return `
+          <a class="back" href="#/clientes">← Clientes</a>
+          <div class="head">
+            <div><h1 id="live-name">${isNew ? "Nuevo cliente" : esc(c.name)}</h1><p class="sub">${isNew ? "Completa los datos y guarda." : `Cliente desde ${shortDate(c.since)} · ${esc(c.vehicle)}`}</p></div>
+            ${isNew ? "" : `<a class="btn" href="#/pedidos/nuevo?cliente=${c.id}">+ Pedido para este cliente</a>`}
+          </div>
+          <div class="grid two">
+            <form class="card fields${flashClass(isNew ? "" : c.id)}" id="client-form" data-id="${isNew ? "" : c.id}">
+              ${field("name", "Nombre o razón social", "text", true)}
+              ${field("phone", "Teléfono / WhatsApp", "tel")}
+              ${field("nit", "NIT o CI")}
+              ${field("email", "Email", "email")}
+              ${field("zone", "Zona")}
+              ${field("vehicle", "Vehículo")}
+              ${field("plate", "Placa")}
+              <div class="field full"><label for="f-notes">Notas</label><textarea id="f-notes" name="notes">${esc(c.notes)}</textarea></div>
+              <div class="actions">
+                ${isNew ? "<span></span>" : `<button class="btn danger" type="button" id="delete-client">Eliminar</button>`}
+                <div class="tools"><span class="dirty" id="dirty" hidden>Cambios sin guardar</span><button class="btn primary" type="submit">${isNew ? "Crear cliente" : "Guardar cambios"}</button></div>
+              </div>
+            </form>
+            <div class="card">
+              <h2>Resumen</h2>
+              <div class="stats">
+                <div class="stat"><span>Pedidos</span><b>${orders.length}</b></div>
+                <div class="stat"><span>Comprado</span><b>${money(sum(orders, (o) => o.price))}</b></div>
+                <div class="stat"><span>Saldo</span><b class="${clientBalance(c.id) ? "amt-out" : ""}">${money(isNew ? 0 : clientBalance(c.id))}</b></div>
+              </div>
+              <h2>Sus pedidos</h2>
+              <div class="list">
+                ${orders.map((o) => `<a href="#/pedidos/${o.id}"><span><strong>${esc(o.part)}</strong><br /><span class="faint">${orderLabel(o)} · ${money(o.price)}</span></span>${statusBadge(o.status)}</a>`).join("") || `<div class="empty">Todavía sin pedidos.</div>`}
+              </div>
+            </div>
+          </div>`
+      }
+
+      function viewOrders() {
+        const q = ui.orderQuery.trim().toLowerCase()
+        const counts = Object.fromEntries(STATUSES.map((s) => [s, db.orders.filter((o) => o.status === s).length]))
+        const rows = [...db.orders]
+          .sort((a, b) => b.num - a.num)
+          .filter((o) => ui.orderStatus === "todos" || o.status === ui.orderStatus)
+          .filter((o) => !q || [o.part, orderLabel(o), clientById(o.clientId)?.name, o.vehicle, o.supplier].join(" ").toLowerCase().includes(q))
+        const chip = (value, label, count) => `<button type="button" class="chip${ui.orderStatus === value ? " on" : ""}" data-status="${value}">${label}<b>${count}</b></button>`
+        return `
+          <div class="head">
+            <div><h1>Pedidos de repuestos</h1><p class="sub">Toca un pedido para ver su detalle. La flecha lo pasa al siguiente estado.</p></div>
+            <div class="tools">
+              <input class="search" id="order-search" type="search" placeholder="Buscar repuesto, cliente, N°…" value="${esc(ui.orderQuery)}" />
+              <a class="btn primary" href="#/pedidos/nuevo">+ Nuevo pedido</a>
+            </div>
+          </div>
+          <div class="chips" style="margin-bottom:14px">
+            ${chip("todos", "Todos", db.orders.length)}
+            ${STATUSES.map((s) => chip(s, STATUS_LABELS[s], counts[s])).join("")}
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>N°</th><th>Repuesto</th><th class="hide-sm">Cliente</th><th>Estado</th><th class="num hide-sm">Precio</th><th class="num">Saldo</th><th class="hide-sm">Entrega</th><th></th></tr></thead>
+              <tbody>
+                ${rows.map((o) => `<tr class="link${flashClass(o.id)}" data-href="#/pedidos/${o.id}">
+                  <td class="muted">${orderLabel(o)}</td>
+                  <td><strong>${esc(o.part)}</strong><br /><span class="faint">${esc(o.vehicle)}</span></td>
+                  <td class="hide-sm">${esc(clientById(o.clientId)?.name ?? "—")}</td>
+                  <td>${statusBadge(o.status)}</td>
+                  <td class="num hide-sm">${money(o.price)}</td>
+                  <td class="num ${balance(o) ? "amt-out" : "muted"}">${balance(o) ? money(balance(o)) : "Pagado"}</td>
+                  <td class="hide-sm muted">${etaText(o)}</td>
+                  <td class="num">${o.status === "entregado" ? "" : `<button class="btn sm" type="button" data-advance="${o.id}" title="Pasar a ${STATUS_LABELS[STATUSES[STATUSES.indexOf(o.status) + 1]]}">→ ${STATUS_LABELS[STATUSES[STATUSES.indexOf(o.status) + 1]]}</button>`}</td>
+                </tr>`).join("") || `<tr><td colspan="8" class="empty">No hay pedidos con ese filtro.</td></tr>`}
+              </tbody>
+            </table>
+          </div>`
+      }
+
+      function viewOrder(id, params) {
+        const isNew = id === "nuevo"
+        const presetClient = params.get("cliente")
+        const firstClient = clientById(presetClient) ?? db.clients[0]
+        const o = isNew
+          ? { part: "", clientId: firstClient?.id ?? "", vehicle: firstClient?.vehicle ?? "", supplier: SUPPLIERS[0], cost: "", price: "", paid: 0, status: "pendiente", eta: shiftDays(5), notes: "" }
+          : orderById(id)
+        if (!o) return notFound("Ese pedido ya no existe.", "#/pedidos")
+        const client = clientById(o.clientId)
+        const stepIndex = STATUSES.indexOf(o.status)
+        const paidPct = o.price ? Math.min(100, Math.round((o.paid / o.price) * 100)) : 0
+        return `
+          <a class="back" href="#/pedidos">← Pedidos</a>
+          <div class="head">
+            <div><h1>${isNew ? "Nuevo pedido" : esc(o.part)}</h1><p class="sub">${isNew ? "Repuesto que pide un cliente." : `${orderLabel(o)} · creado el ${shortDate(o.created)} · ${client ? `<a href="#/clientes/${client.id}">${esc(client.name)}</a>` : "sin cliente"}`}</p></div>
+            ${isNew ? "" : statusBadge(o.status)}
+          </div>
+          ${isNew ? "" : `<div class="steps">${STATUSES.map((s, i) => `<button type="button" class="step${i < stepIndex ? " done" : ""}${i === stepIndex ? " now" : ""}" data-set-status="${s}">${i <= stepIndex ? "✓ " : ""}${STATUS_LABELS[s]}<small>${STATUS_HINTS[s]}</small></button>`).join("")}</div>`}
+          <div class="grid two">
+            <form class="card fields${flashClass(isNew ? "" : o.id)}" id="order-form" data-id="${isNew ? "" : o.id}">
+              <div class="field full"><label for="f-part">Repuesto</label><input id="f-part" name="part" value="${esc(o.part)}" placeholder="Ej. Pastillas de freno delanteras" required /></div>
+              <div class="field"><label for="f-client">Cliente</label><select id="f-client" name="clientId">${db.clients.map((c) => `<option value="${c.id}" ${c.id === o.clientId ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</select></div>
+              <div class="field"><label for="f-vehicle">Vehículo</label><input id="f-vehicle" name="vehicle" value="${esc(o.vehicle)}" /></div>
+              <div class="field"><label for="f-supplier">Proveedor</label><select id="f-supplier" name="supplier">${SUPPLIERS.map((s) => `<option ${s === o.supplier ? "selected" : ""}>${esc(s)}</option>`).join("")}</select></div>
+              <div class="field"><label for="f-eta">Llega aprox.</label><input id="f-eta" name="eta" type="date" value="${esc(o.eta)}" /></div>
+              <div class="field"><label for="f-cost">Costo (proveedor), Bs</label><input id="f-cost" name="cost" type="number" min="0" step="10" value="${esc(o.cost)}" required /></div>
+              <div class="field"><label for="f-price">Precio al cliente, Bs</label><input id="f-price" name="price" type="number" min="0" step="10" value="${esc(o.price)}" required /></div>
+              <div class="margin-box" id="margin-box"></div>
+              <div class="field full"><label for="f-notes">Notas</label><textarea id="f-notes" name="notes" placeholder="Código de pieza, marca, garantía…">${esc(o.notes)}</textarea></div>
+              <div class="actions">
+                ${isNew ? "<span></span>" : `<button class="btn danger" type="button" id="delete-order">Eliminar</button>`}
+                <div class="tools"><span class="dirty" id="dirty" hidden>Cambios sin guardar</span><button class="btn primary" type="submit">${isNew ? "Crear pedido" : "Guardar cambios"}</button></div>
+              </div>
+            </form>
+            ${isNew ? `<div class="card"><h2>Cómo sigue</h2><p class="muted">Al crearlo queda <b>Pendiente</b>. Cuando el proveedor lo envía pasa a <b>En camino</b>; al llegar, <b>Recibido</b> (el costo se anota como egreso en Finanzas); y al dárselo al cliente, <b>Entregado</b>.</p></div>` : `
+            <div class="card${flashClass(`pay-${o.id}`)}">
+              <h2>Pagos</h2>
+              <div class="stats">
+                <div class="stat"><span>Precio</span><b>${money(o.price)}</b></div>
+                <div class="stat"><span>Pagado</span><b class="amt-in">${money(o.paid)}</b></div>
+                <div class="stat"><span>Saldo</span><b class="${balance(o) ? "amt-out" : ""}">${money(balance(o))}</b></div>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:${paidPct}%"></div></div>
+              <p class="faint">${paidPct}% cobrado</p>
+              ${balance(o) ? `<form class="pay" id="pay-form"><input name="amount" type="number" min="1" max="${balance(o)}" step="1" placeholder="Monto, Bs" required /><button class="btn sm" type="button" data-fill="${balance(o)}">Todo</button><button class="btn primary sm" type="submit">Registrar pago</button></form>` : `<p class="muted">Pedido pagado por completo.</p>`}
+              <h2 style="margin-top:18px">Movimientos</h2>
+              <div class="list">
+                ${db.moves.filter((m) => m.orderId === o.id).sort((a, b) => b.date.localeCompare(a.date)).map((m) => `<div class="row"><span>${esc(m.concept)}<br /><span class="faint">${shortDate(m.date)}</span></span><span class="${m.type === "in" ? "amt-in" : "amt-out"}">${m.type === "in" ? "+" : "−"}${money(m.amount)}</span></div>`).join("") || `<div class="empty">Sin movimientos todavía.</div>`}
+              </div>
+            </div>`}
+          </div>`
+      }
+
+      function weekBuckets() {
+        const end = today()
+        return Array.from({ length: WEEKS_IN_CHART }, (_, i) => {
+          const to = new Date(end); to.setDate(end.getDate() - (WEEKS_IN_CHART - 1 - i) * 7)
+          const from = new Date(to); from.setDate(to.getDate() - 6)
+          const inRange = (m) => { const d = parseDay(m.date); return d >= from && d <= to }
+          return {
+            label: i === WEEKS_IN_CHART - 1 ? "Esta sem." : `${from.getDate()} ${MONTHS[from.getMonth()]}`,
+            in: sum(db.moves.filter((m) => m.type === "in" && inRange(m)), (m) => m.amount),
+            out: sum(db.moves.filter((m) => m.type === "out" && inRange(m)), (m) => m.amount),
+          }
+        })
+      }
+
+      function viewFinance() {
+        const monthMoves = db.moves.filter((m) => inThisMonth(m.date))
+        const monthIn = sum(monthMoves.filter((m) => m.type === "in"), (m) => m.amount)
+        const monthOut = sum(monthMoves.filter((m) => m.type === "out"), (m) => m.amount)
+        const weeks = weekBuckets()
+        const peak = Math.max(1, ...weeks.flatMap((w) => [w.in, w.out]))
+        const byCategory = OUT_CATEGORIES.map((cat) => ({ cat, total: sum(monthMoves.filter((m) => m.type === "out" && m.category === cat), (m) => m.amount) })).filter((c) => c.total > 0).sort((a, b) => b.total - a.total)
+        const moves = [...db.moves].filter((m) => ui.moveType === "todos" || m.type === ui.moveType).sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id, undefined, { numeric: true })).slice(0, MOVES_SHOWN)
+        const monthName = MONTHS[today().getMonth()]
+        return `
+          <div class="head">
+            <div><h1>Finanzas</h1><p class="sub">Resumen de ${monthName}. Los pagos de pedidos y las compras a proveedores entran solos.</p></div>
+          </div>
+          <div class="grid kpis">
+            <div class="card kpi"><span>Ingresos de ${monthName}</span><b class="amt-in">${money(monthIn)}</b></div>
+            <div class="card kpi"><span>Egresos de ${monthName}</span><b class="amt-out">${money(monthOut)}</b></div>
+            <div class="card kpi"><span>Utilidad</span><b>${money(monthIn - monthOut)}</b><small>${monthIn ? Math.round(((monthIn - monthOut) / monthIn) * 100) : 0}% de margen</small></div>
+            <div class="card kpi"><span>Por cobrar</span><b>${money(sum(db.orders, balance))}</b><small>saldos de pedidos</small></div>
+          </div>
+          <div class="grid two" style="margin-bottom:14px">
+            <div class="card">
+              <div class="head" style="margin-bottom:4px"><h2 style="margin:0">Ingresos y egresos por semana</h2><div class="legend"><span class="l-in">Ingresos</span><span class="l-out">Egresos</span></div></div>
+              <div class="chart" role="img" aria-label="Ingresos y egresos de las últimas ${WEEKS_IN_CHART} semanas">
+                ${weeks.map((w) => `<div class="week"><div class="bars"><i class="in" style="height:${(w.in / peak) * 100}%" title="Ingresos ${money(w.in)}"></i><i class="out" style="height:${(w.out / peak) * 100}%" title="Egresos ${money(w.out)}"></i></div><small>${w.label}</small></div>`).join("")}
+              </div>
+            </div>
+            <div class="card">
+              <h2>En qué se va la plata (${monthName})</h2>
+              ${byCategory.map((c) => `<div class="cat"><div><span>${esc(c.cat)}</span><span class="muted">${money(c.total)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${(c.total / byCategory[0].total) * 100}%"></div></div></div>`).join("") || `<div class="empty">Sin egresos este mes.</div>`}
+            </div>
+          </div>
+          <div class="grid two">
+            <div>
+              <div class="head" style="margin-bottom:10px">
+                <h2 style="margin:0">Últimos movimientos</h2>
+                <div class="chips">${[["todos", "Todos"], ["in", "Ingresos"], ["out", "Egresos"]].map(([v, l]) => `<button type="button" class="chip${ui.moveType === v ? " on" : ""}" data-move-type="${v}">${l}</button>`).join("")}</div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Fecha</th><th>Concepto</th><th class="hide-sm">Rubro</th><th class="num">Monto</th></tr></thead>
+                  <tbody>
+                    ${moves.map((m) => `<tr class="${m.orderId ? "link" : ""}${flashClass(m.id)}" ${m.orderId ? `data-href="#/pedidos/${m.orderId}"` : ""}>
+                      <td class="muted">${shortDate(m.date)}</td><td>${esc(m.concept)}</td><td class="hide-sm muted">${esc(m.category)}</td>
+                      <td class="num ${m.type === "in" ? "amt-in" : "amt-out"}">${m.type === "in" ? "+" : "−"}${money(m.amount)}</td></tr>`).join("")}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <form class="card fields" id="move-form">
+              <h2 class="full" style="grid-column:1/-1;margin:0">Registrar movimiento</h2>
+              <div class="field"><label for="m-type">Tipo</label><select id="m-type" name="type"><option value="out">Egreso</option><option value="in">Ingreso</option></select></div>
+              <div class="field"><label for="m-category">Rubro</label><select id="m-category" name="category">${OUT_CATEGORIES.map((c) => `<option>${c}</option>`).join("")}</select></div>
+              <div class="field full"><label for="m-concept">Concepto</label><input id="m-concept" name="concept" placeholder="Ej. Flete desde Cochabamba" required /></div>
+              <div class="field"><label for="m-amount">Monto, Bs</label><input id="m-amount" name="amount" type="number" min="1" step="1" required /></div>
+              <div class="field"><label for="m-date">Fecha</label><input id="m-date" name="date" type="date" value="${isoDay(today())}" required /></div>
+              <div class="actions"><span class="faint">Se suma al resumen y al gráfico al instante.</span><button class="btn primary" type="submit">Agregar</button></div>
+            </form>
+          </div>`
+      }
+
+      function notFound(text, href) {
+        return `<div class="card empty"><p>${text}</p><a class="btn" href="${href}">Volver</a></div>`
+      }
+
+      // ---------- enrutado y pintado ----------
+      function route() {
+        const [path, query = ""] = location.hash.replace(/^#\/?/, "").split("?")
+        const [section = "inicio", id] = path.split("/")
+        return { section, id, params: new URLSearchParams(query) }
+      }
+
+      function render() {
+        const { section, id, params } = route()
+        const views = {
+          inicio: () => viewHome(),
+          clientes: () => (id ? viewClient(id) : viewClients()),
+          pedidos: () => (id ? viewOrder(id, params) : viewOrders()),
+          finanzas: () => viewFinance(),
+        }
+        const view = $("#view")
+        const focused = document.activeElement?.id
+        const caret = document.activeElement?.selectionStart
+        view.innerHTML = (views[section] ?? views.inicio)()
+        document.querySelectorAll("#nav a").forEach((a) => a.classList.toggle("on", a.dataset.section === (views[section] ? section : "inicio")))
+        // Las búsquedas repintan la tabla en cada tecla: se devuelve el foco y el cursor al buscador.
+        const input = focused === "client-search" || focused === "order-search" ? $(`#${focused}`) : null
+        if (input) {
+          input.focus()
+          input.setSelectionRange(caret, caret)
+        }
+        bindView()
+      }
+
+      function readForm(form) {
+        return Object.fromEntries(new FormData(form).entries())
+      }
+
+      function watchDirty(form) {
+        const initial = JSON.stringify(readForm(form))
+        form.addEventListener("input", () => { $("#dirty").hidden = JSON.stringify(readForm(form)) === initial })
+      }
+
+      function updateMargin() {
+        const form = $("#order-form")
+        if (!form) return
+        const cost = Number(form.elements.cost.value) || 0
+        const price = Number(form.elements.price.value) || 0
+        const margin = price - cost
+        const pct = price ? Math.round((margin / price) * 100) : 0
+        $("#margin-box").innerHTML = `<span class="muted">Ganancia del pedido</span><strong class="${margin < 0 ? "amt-out" : "amt-in"}">${money(margin)} · ${pct}%</strong>`
+      }
+
+      function setOrderStatus(order, status) {
+        if (order.status === status) return
+        order.status = status
+        let extra = ""
+        // Al llegar el repuesto se paga al proveedor: el costo entra como egreso una sola vez.
+        if ((status === "recibido" || status === "entregado") && !order.costBooked) {
+          order.costBooked = true
+          db.moves.push({ id: `m${++db.seq.move}`, date: isoDay(today()), type: "out", category: "Compra de repuestos", concept: `${order.part} · ${order.supplier}`, amount: order.cost, orderId: order.id })
+          extra = ` · egreso de ${money(order.cost)}`
+        }
+        commit({ text: `${orderLabel(order)} pasó a ${STATUS_LABELS[status]}${extra}`, flash: order.id, toastText: `${orderLabel(order)} → ${STATUS_LABELS[status]}${extra}` })
+      }
+
+      function bindView() {
+        document.querySelectorAll("tr[data-href]").forEach((row) => {
+          row.addEventListener("click", (event) => { if (!event.target.closest("a, button")) location.hash = row.dataset.href })
+        })
+
+        $("#client-search")?.addEventListener("input", (event) => { ui.clientQuery = event.target.value; render() })
+        $("#order-search")?.addEventListener("input", (event) => { ui.orderQuery = event.target.value; render() })
+        document.querySelectorAll("[data-status]").forEach((chip) => chip.addEventListener("click", () => { ui.orderStatus = chip.dataset.status; render() }))
+        document.querySelectorAll("[data-move-type]").forEach((chip) => chip.addEventListener("click", () => { ui.moveType = chip.dataset.moveType; render() }))
+        document.querySelectorAll("[data-advance]").forEach((button) => button.addEventListener("click", () => {
+          const order = orderById(button.dataset.advance)
+          setOrderStatus(order, STATUSES[STATUSES.indexOf(order.status) + 1])
+        }))
+        document.querySelectorAll("[data-set-status]").forEach((button) => button.addEventListener("click", () => {
+          setOrderStatus(orderById(route().id), button.dataset.setStatus)
+        }))
+
+        const clientForm = $("#client-form")
+        if (clientForm) {
+          watchDirty(clientForm)
+          // El título de la ficha sigue al nombre mientras se escribe.
+          clientForm.elements.name.addEventListener("input", (event) => { $("#live-name").textContent = event.target.value || "Nuevo cliente" })
+          clientForm.addEventListener("submit", (event) => {
+            event.preventDefault()
+            const data = readForm(clientForm)
+            const id = clientForm.dataset.id
+            if (id) {
+              Object.assign(clientById(id), data)
+              commit({ text: `Editaste la ficha de ${data.name}`, flash: id, toastText: "Cliente actualizado" })
+            } else {
+              const client = { id: `c${++db.seq.client}`, since: isoDay(today()), ...data }
+              db.clients.unshift(client)
+              location.hash = "#/clientes"
+              commit({ text: `Nuevo cliente: ${data.name}`, flash: client.id, toastText: "Cliente creado" })
+            }
+          })
+          $("#delete-client")?.addEventListener("click", () => {
+            const client = clientById(clientForm.dataset.id)
+            const count = ordersOf(client.id).length
+            if (count && !confirm(`${client.name} tiene ${count} pedidos. ¿Eliminar igual? Los pedidos quedan sin cliente.`)) return
+            if (!count && !confirm(`¿Eliminar a ${client.name}?`)) return
+            db.clients = db.clients.filter((c) => c.id !== client.id)
+            location.hash = "#/clientes"
+            commit({ text: `Eliminaste a ${client.name}`, toastText: "Cliente eliminado" })
+          })
+        }
+
+        const orderForm = $("#order-form")
+        if (orderForm) {
+          watchDirty(orderForm)
+          updateMargin()
+          orderForm.addEventListener("input", updateMargin)
+          orderForm.elements.clientId.addEventListener("change", (event) => { orderForm.elements.vehicle.value = clientById(event.target.value)?.vehicle ?? "" })
+          orderForm.addEventListener("submit", (event) => {
+            event.preventDefault()
+            const data = readForm(orderForm)
+            const fields = { ...data, cost: Number(data.cost), price: Number(data.price) }
+            const id = orderForm.dataset.id
+            if (id) {
+              Object.assign(orderById(id), fields)
+              commit({ text: `Editaste ${orderLabel(orderById(id))} (${fields.part})`, flash: id, toastText: "Pedido actualizado" })
+            } else {
+              const order = { id: `p${Date.now()}`, num: ++db.seq.order, paid: 0, status: "pendiente", created: isoDay(today()), costBooked: false, ...fields }
+              db.orders.push(order)
+              location.hash = "#/pedidos"
+              commit({ text: `Nuevo pedido ${orderLabel(order)}: ${order.part}`, flash: order.id, toastText: `Pedido ${orderLabel(order)} creado` })
+            }
+          })
+          $("#delete-order")?.addEventListener("click", () => {
+            const order = orderById(orderForm.dataset.id)
+            if (!confirm(`¿Eliminar ${orderLabel(order)}? Sus movimientos quedan en Finanzas.`)) return
+            db.orders = db.orders.filter((o) => o.id !== order.id)
+            location.hash = "#/pedidos"
+            commit({ text: `Eliminaste ${orderLabel(order)}`, toastText: "Pedido eliminado" })
+          })
+        }
+
+        const payForm = $("#pay-form")
+        if (payForm) {
+          payForm.querySelector("[data-fill]").addEventListener("click", (event) => { payForm.elements.amount.value = event.target.dataset.fill })
+          payForm.addEventListener("submit", (event) => {
+            event.preventDefault()
+            const order = orderById(route().id)
+            const amount = Math.min(Number(payForm.elements.amount.value), balance(order))
+            if (!amount) return
+            order.paid += amount
+            db.moves.push({ id: `m${++db.seq.move}`, date: isoDay(today()), type: "in", category: "Pago de pedido", concept: `${balance(order) ? "Pago" : "Saldo"} ${orderLabel(order)}`, amount, orderId: order.id })
+            commit({ text: `Pago de ${money(amount)} en ${orderLabel(order)}`, flash: `pay-${order.id}`, toastText: `Pago de ${money(amount)} registrado` })
+          })
+        }
+
+        const moveForm = $("#move-form")
+        if (moveForm) {
+          moveForm.elements.type.addEventListener("change", (event) => {
+            const categories = event.target.value === "in" ? IN_CATEGORIES.filter((c) => c !== "Pago de pedido") : OUT_CATEGORIES
+            moveForm.elements.category.innerHTML = categories.map((c) => `<option>${c}</option>`).join("")
+          })
+          moveForm.addEventListener("submit", (event) => {
+            event.preventDefault()
+            const data = readForm(moveForm)
+            const move = { id: `m${++db.seq.move}`, date: data.date, type: data.type, category: data.category, concept: data.concept, amount: Number(data.amount) }
+            db.moves.push(move)
+            commit({ text: `${move.type === "in" ? "Ingreso" : "Egreso"} de ${money(move.amount)}: ${move.concept}`, flash: move.id, toastText: "Movimiento agregado" })
+          })
+        }
+      }
+
+      $("#reset").addEventListener("click", () => {
+        if (!confirm("¿Volver a los datos de ejemplo? Se pierde lo que cambiaste.")) return
+        db = seed()
+        ui = { clientQuery: "", orderQuery: "", orderStatus: "todos", moveType: "todos" }
+        location.hash = "#/inicio"
+        commit({ toastText: "Demo reiniciada" })
+      })
+
+      window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0) })
       render()
     </script>
   </body>

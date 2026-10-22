@@ -74,6 +74,7 @@ export const I18N = {
     featuredBadge: "La más pedida",
     seePack: "Ver pack",
     daysUnit: "días",
+    negotiablePrice: "precio conversable",
     perUnit: "c/u",
     screenshotAlt: "Captura del ejemplo {brand}",
     modsTitle: "Cada pack se puede ampliar",
@@ -133,8 +134,8 @@ export const I18N = {
     quoteHeading: "Cotización web — {owner}",
     pack1: {
       name: "Landing 1 sección",
-      blurb: "Una sola pantalla: mensaje, foto y un botón. Ideal para WhatsApp y anuncios.",
-      goodFor: "Café, evento, campaña, perfil que solo necesita un CTA.",
+      blurb: "Una página para promocionar tu negocio y mandar al cliente a WhatsApp. Sirve para campañas y anuncios.",
+      goodFor: "Cafés, eventos o un perfil que solo necesita un contacto claro.",
       stack: "Lo entrego en Astro (página rápida) o React, según el caso. Incluye 1 revisión: una ronda de cambios después de ver el sitio, para ajustar textos, colores o el botón. Un cambio extra después se cotiza aparte.",
       excludes: ["Dominio", "Hosting", "Redacción de textos", "Fotos profesionales"],
       includes: [
@@ -147,8 +148,8 @@ export const I18N = {
     },
     pack3: {
       name: "Landing 3 secciones",
-      blurb: "Hero + servicios o portafolio + contacto. La más pedida para marca personal.",
-      goodFor: "Nutricionista, fotógrafo, abogado, marca personal.",
+      blurb: "Presenta quién eres, qué ofreces y cómo te escriben. Ayuda a vender tu marca personal.",
+      goodFor: "Profesionales y marcas que necesitan servicios y un contacto, no solo un anuncio.",
       stack: "Astro o React. Incluye 2 revisiones: dos rondas de cambios después de la primera entrega, para afinar secciones, fotos y el contacto.",
       excludes: ["Dominio", "Hosting", "Redacción de textos", "Fotos profesionales"],
       includes: [
@@ -161,8 +162,8 @@ export const I18N = {
     },
     bundleLandings: {
       name: "2 landings · primera compra",
-      blurb: "Landing de 1 sección + landing de 3 secciones. {discount} off sobre la suma de los dos precios ({pack1} + {pack3}), solo en la primera compra.",
-      goodFor: "Un negocio que necesita campaña corta y marca personal, o dos sitios en el primer encargo.",
+      blurb: "Un anuncio corto y una página de marca, juntos. {discount} off sobre la suma de los dos precios ({pack1} + {pack3}), solo en la primera compra.",
+      goodFor: "Quien arranca con una campaña y una página de confianza en el mismo encargo.",
       stack: "Las dos en Astro o React. 2 revisiones en total, repartidas entre ambos sitios: dos rondas de cambios después de ver las primeras versiones.",
       excludes: ["Dominio", "Hosting", "Redacción de textos", "Fotos profesionales"],
       includes: [
@@ -175,8 +176,8 @@ export const I18N = {
     },
     packWeb: {
       name: "Web común",
-      blurb: "Sitio de negocio: varias páginas o una larga con menú. Confianza, servicios y contacto.",
-      goodFor: "Taller, estudio contable, clínica, restaurante con carta.",
+      blurb: "El sitio de tu negocio: qué haces, quiénes son y cómo te encuentran. Genera confianza y pedidos.",
+      goodFor: "Talleres, clínicas, estudios y restaurantes que quieren verse serios online.",
       stack: "Astro o React a medida (no WordPress). Incluye 3 revisiones: tres rondas de cambios sobre el sitio ya armado, para textos, menú y contacto.",
       excludes: ["Dominio", "Hosting", "Redacción de textos", "Fotos profesionales"],
       includes: [
@@ -189,8 +190,8 @@ export const I18N = {
     },
     packShop: {
       name: "E-commerce inicial",
-      blurb: "Catálogo, carrito y pedido. En Bolivia el cierre típico es WhatsApp o QR bancario.",
-      goodFor: "Tienda chica, artesanía, ropa, productos con stock acotado.",
+      blurb: "Muestra tus productos, arma el pedido y lo cierra por WhatsApp o QR. Facilita vender sin una tienda grande.",
+      goodFor: "Ropa, artesanía y tiendas chicas que quieren recibir pedidos por el celular.",
       stack: "React a medida, o WooCommerce si necesitas un panel. Incluye 2 revisiones: dos rondas de cambios después de ver catálogo, carrito y el pedido.",
       excludes: ["Dominio", "Hosting", "Fotos de producto", "Pasarela de tarjetas (salvo extra)"],
       includes: [
@@ -203,8 +204,8 @@ export const I18N = {
     },
     packIA: {
       name: "Conexiones con IA",
-      blurb: "Un bot o asistente pegado a tu web o WhatsApp: responde, consulta stock o agenda. Los tokens de la API los paga el cliente.",
-      goodFor: "Taller, clínica, tienda, soporte que se cansa de las mismas preguntas.",
+      blurb: "Un asistente que responde horario, stock o agenda. Libera tiempo de atención y atiende fuera de hora.",
+      goodFor: "Talleres, clínicas y tiendas que se cansan de repetir las mismas preguntas.",
       stack: "El chat se entrega en la web; el servidor habla con Groq u OpenAI. Incluye 2 revisiones: dos rondas para ajustar respuestas, tono y el mensaje de “no sé”.",
       excludes: ["Tokens de IA", "Número de WhatsApp", "Clave de la API"],
       includes: [
@@ -217,8 +218,8 @@ export const I18N = {
     },
     packData: {
       name: "Análisis de datos",
-      blurb: "Tu Excel o tu sistema convertido en números que se entienden: KPIs, gráficos y recomendaciones concretas.",
-      goodFor: "Taller, tienda, restaurante o estudio que vende pero no sabe dónde se le va el margen.",
+      blurb: "Pasa tus números del día a día a un tablero claro: qué vende, dónde se pierde plata y qué ajustar.",
+      goodFor: "Negocios que venden pero no ven el margen ni por dónde se les va el trabajo.",
       stack: "Análisis con SQL o Python y un dashboard que se abre en el navegador. Incluye 1 revisión: una ronda para ajustar indicadores y gráficos después de ver el primer informe.",
       excludes: ["Carga manual de datos en papel", "Software de pago (Power BI, Tableau)", "Actualización mensual (salvo extra)"],
       includes: [
@@ -230,9 +231,9 @@ export const I18N = {
       ],
     },
     packCrud: {
-      name: "CRUD profesional",
-      blurb: "Alta, baja, cambio y listado de una entidad de negocio, con validación, buscador y roles simples.",
-      goodFor: "Clientes, inventario, citas, leads. El panel que el Excel ya no aguanta.",
+      name: "Panel para organizar",
+      blurb: "Carga, busca y actualiza clientes, citas o stock en un solo lugar. Ordena lo que ya no cabe en una planilla.",
+      goodFor: "Quien atiende clientes, inventario o reservas y necesita dejar de pelearse con archivos sueltos.",
       stack: "Panel en React y servidor con FastAPI. Incluye 2 revisiones: dos rondas de cambios sobre listados, formularios y roles, después de la primera entrega.",
       excludes: ["Servidor y base de datos mensuales", "Dominio", "Hosting"],
       includes: [
@@ -244,13 +245,13 @@ export const I18N = {
       ],
     },
     packErp: {
-      name: "ERP inicial (módulos)",
-      blurb: "No es SAP. Es un ERP chico a medida: órdenes, clientes, equipo y un estado de resultados. Como Vehimac: un taller que deja el Excel.",
-      goodFor: "Taller, depósito, estudio que facture y mueva stock o órdenes.",
+      name: "Sistema del negocio",
+      blurb: "Organiza clientes, órdenes de trabajo y las cuentas del día. Un solo lugar para ver qué está en curso y cómo va el negocio.",
+      goodFor: "Talleres, depósitos y estudios que facturan, mueven stock o siguen trabajos en paralelo.",
       stack: "Panel en React y servidor con FastAPI, por módulos. Incluye 3 revisiones: tres rondas de cambios sobre el flujo de órdenes y los números, después de ver el primer lote.",
       excludes: ["Servidor y base de datos mensuales", "Nómina fiscal", "Facturación SIN"],
       includes: [
-        "Hasta 4 módulos (ej. clientes, órdenes, equipo, finanzas)",
+        "Hasta 4 módulos (ej. clientes, pedidos de repuestos, finanzas)",
         "Kanban o listados + KPIs del día",
         "Migraciones SQL y README de operación",
         "Deploy (Railway/Vercel o similar)",
@@ -259,8 +260,8 @@ export const I18N = {
     },
     packFront: {
       name: "Frontend animado",
-      blurb: "Landing o home de producto con motion, tipografía y microinteracciones. Para marcas que no quieren ‘plantilla de Bootstrap’.",
-      goodFor: "Estudio, SaaS, marca personal que vende caro, lanzamiento remoto.",
+      blurb: "Una página de marca con movimiento y detalle. Se ve profesional y ayuda a vender más caro.",
+      goodFor: "Estudios, lanzamientos y marcas que quieren verse premium, no como una plantilla.",
       stack: "Astro o React, con movimiento en CSS y JS. Incluye 2 revisiones sobre un diseño ya cerrado: dos rondas para afinar animación, tipografía y el home.",
       excludes: ["Dominio", "Hosting", "Redacción de textos", "Fotos profesionales"],
       includes: [
@@ -323,8 +324,8 @@ export const I18N = {
       extraModule: "Módulo extra",
       loginRoles: "Login y roles (si no vino en el lote inicial)",
       reports: "Reportes PDF / Excel",
-      whatsappFromOrder: "WhatsApp desde una OT",
-      partsAlerts: "Alertas de piezas sin recoger",
+      whatsappFromOrder: "WhatsApp desde un pedido",
+      partsAlerts: "Alertas de repuestos sin entregar",
       pwa: "PWA (instalar en el celular)",
       secondBranch: "Segunda sucursal",
       extraInnerPage: "Página interna extra (mismo lenguaje visual)",
@@ -462,6 +463,7 @@ export const I18N = {
     featuredBadge: "Most requested",
     seePack: "View pack",
     daysUnit: "days",
+    negotiablePrice: "negotiable price",
     perUnit: "each",
     screenshotAlt: "Screenshot of the {brand} example",
     modsTitle: "Every pack can grow",
@@ -521,8 +523,8 @@ export const I18N = {
     quoteHeading: "Website quote — {owner}",
     pack1: {
       name: "1-section landing",
-      blurb: "One screen: message, photo and a button. Made for ads and WhatsApp.",
-      goodFor: "Cafe, event, campaign, a profile that only needs a CTA.",
+      blurb: "One page to promote your business and send people to WhatsApp. Built for campaigns and ads.",
+      goodFor: "Cafes, events, or a profile that only needs a clear contact.",
       stack: "I ship it in Astro (a fast page) or React, depending on the case. Includes 1 revision: one round of changes after you see the site, to tweak copy, colors or the button. Extra changes after that are quoted separately.",
       excludes: ["Domain", "Hosting", "Copywriting", "Professional photos"],
       includes: [
@@ -535,8 +537,8 @@ export const I18N = {
     },
     pack3: {
       name: "3-section landing",
-      blurb: "Hero + services or work + contact. The usual pack for personal brands.",
-      goodFor: "Nutritionist, photographer, lawyer, personal brand.",
+      blurb: "Shows who you are, what you offer and how to reach you. Helps sell a personal brand.",
+      goodFor: "Professionals and brands that need services and contact, not just an ad.",
       stack: "Astro or React. Includes 2 revisions: two rounds of changes after the first delivery, to tighten sections, photos and contact.",
       excludes: ["Domain", "Hosting", "Copywriting", "Professional photos"],
       includes: [
@@ -549,8 +551,8 @@ export const I18N = {
     },
     bundleLandings: {
       name: "2 landings · first purchase",
-      blurb: "A 1-section landing plus a 3-section landing. {discount} off the two prices added up ({pack1} + {pack3}), first purchase only.",
-      goodFor: "A business that needs a short campaign and a personal brand, or two sites in the first job.",
+      blurb: "A short campaign page and a brand page, together. {discount} off the two prices added up ({pack1} + {pack3}), first purchase only.",
+      goodFor: "A first job that needs both a campaign and a page people can trust.",
       stack: "Both sites in Astro or React. 2 revisions total, split across both sites: two rounds of changes after you see the first versions.",
       excludes: ["Domain", "Hosting", "Copywriting", "Professional photos"],
       includes: [
@@ -563,8 +565,8 @@ export const I18N = {
     },
     packWeb: {
       name: "Standard website",
-      blurb: "Business site: several pages or one long page with a menu. Trust, services, contact.",
-      goodFor: "Workshop, accounting studio, clinic, restaurant with a menu.",
+      blurb: "Your business site: what you do, who you are and how to find you. Builds trust and brings in requests.",
+      goodFor: "Workshops, clinics, studios and restaurants that want to look serious online.",
       stack: "Custom Astro or React (not WordPress). Includes 3 revisions: three rounds of changes on the built site, for copy, menu and contact.",
       excludes: ["Domain", "Hosting", "Copywriting", "Professional photos"],
       includes: [
@@ -577,8 +579,8 @@ export const I18N = {
     },
     packShop: {
       name: "Starter ecommerce",
-      blurb: "Catalog, cart and order. In Bolivia checkout is usually WhatsApp or bank QR.",
-      goodFor: "Small shop, crafts, clothing, limited stock.",
+      blurb: "Show products, build the order and close it on WhatsApp or QR. Makes selling easier without a big store.",
+      goodFor: "Clothing, crafts and small shops that want orders on the phone.",
       stack: "Custom React, or WooCommerce if you need an admin. Includes 2 revisions: two rounds of changes after you see the catalog, cart and order flow.",
       excludes: ["Domain", "Hosting", "Product photos", "Card payments (unless added)"],
       includes: [
@@ -591,8 +593,8 @@ export const I18N = {
     },
     packIA: {
       name: "AI connections",
-      blurb: "A bot or assistant on your site or WhatsApp: answers, checks stock or books. The client pays API tokens.",
-      goodFor: "Workshop, clinic, shop, support tired of the same questions.",
+      blurb: "An assistant that answers hours, stock or bookings. Frees up support time and covers after hours.",
+      goodFor: "Workshops, clinics and shops tired of repeating the same answers.",
       stack: "The chat ships on the site; the server talks to Groq or OpenAI. Includes 2 revisions: two rounds to tune replies, tone and the “I don’t know” message.",
       excludes: ["AI tokens", "WhatsApp number", "API key"],
       includes: [
@@ -605,8 +607,8 @@ export const I18N = {
     },
     packData: {
       name: "Data analysis",
-      blurb: "Your Excel or system turned into numbers you can read: KPIs, charts and concrete recommendations.",
-      goodFor: "Workshop, shop, restaurant or studio that sells but cannot tell where the margin goes.",
+      blurb: "Turns day-to-day numbers into a clear board: what sells, where money leaks and what to change.",
+      goodFor: "Businesses that sell but cannot see the margin or where the work piles up.",
       stack: "Analysis in SQL or Python and a dashboard that opens in the browser. Includes 1 revision: one round to adjust metrics and charts after the first report.",
       excludes: ["Manual entry of paper records", "Paid software (Power BI, Tableau)", "Monthly refresh (unless added)"],
       includes: [
@@ -618,9 +620,9 @@ export const I18N = {
       ],
     },
     packCrud: {
-      name: "Professional CRUD",
-      blurb: "Create, read, update, delete for one business entity, with validation, search and simple roles.",
-      goodFor: "Clients, inventory, appointments, leads. The panel for when Excel breaks.",
+      name: "Org panel",
+      blurb: "Add, search and update clients, bookings or stock in one place. Replaces scattered spreadsheets.",
+      goodFor: "Anyone managing clients, inventory or bookings who needs one shared list.",
       stack: "React admin and a FastAPI server. Includes 2 revisions: two rounds of changes on lists, forms and roles after the first delivery.",
       excludes: ["Monthly server and database", "Domain", "Hosting"],
       includes: [
@@ -632,13 +634,13 @@ export const I18N = {
       ],
     },
     packErp: {
-      name: "Starter ERP (modules)",
-      blurb: "Not SAP. A small custom ERP: orders, clients, team and a P&L. Like Vehimac: a workshop leaving Excel behind.",
-      goodFor: "Workshop, warehouse, studio that invoices and moves stock or jobs.",
+      name: "Business system",
+      blurb: "Keeps clients, work orders and daily accounts in one place. You see what is in progress and how the business is doing.",
+      goodFor: "Workshops, warehouses and studios that invoice, move stock or track jobs in parallel.",
       stack: "React admin and a FastAPI server, shipped in modules. Includes 3 revisions: three rounds of changes on the order flow and numbers after the first batch.",
       excludes: ["Monthly server and database", "Payroll tax filings", "National e-invoicing"],
       includes: [
-        "Up to 4 modules (e.g. clients, orders, team, finance)",
+        "Up to 4 modules (e.g. clients, parts orders, finance)",
         "Kanban or lists + daily KPIs",
         "SQL migrations and an ops README",
         "Deploy (Railway/Vercel or similar)",
@@ -647,8 +649,8 @@ export const I18N = {
     },
     packFront: {
       name: "Animated frontend",
-      blurb: "A product home with motion, type and micro-interactions. For brands that refuse a Bootstrap template.",
-      goodFor: "Studio, SaaS, premium personal brand, remote launch.",
+      blurb: "A brand page with motion and care. Looks professional and helps you charge more.",
+      goodFor: "Studios, launches and brands that want to look premium, not like a template.",
       stack: "Astro or React, with CSS and JS motion. Includes 2 revisions on a locked design: two rounds to tighten animation, type and the home.",
       excludes: ["Domain", "Hosting", "Copywriting", "Professional photos"],
       includes: [
@@ -711,8 +713,8 @@ export const I18N = {
       extraModule: "Extra module",
       loginRoles: "Login and roles (if not in the first batch)",
       reports: "PDF / Excel reports",
-      whatsappFromOrder: "WhatsApp from a work order",
-      partsAlerts: "Uncollected-parts alerts",
+      whatsappFromOrder: "WhatsApp from an order",
+      partsAlerts: "Undelivered-parts alerts",
       pwa: "PWA (install on phone)",
       secondBranch: "Second location",
       extraInnerPage: "Extra inner page (same visual language)",

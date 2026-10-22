@@ -1,5 +1,5 @@
 import { BUNDLE, BUNDLE_DISCOUNT_RATE, PACKS } from "../data/catalog.js"
-import { formatBs, formatPercent } from "./format.js"
+import { formatBs, formatBsRange, formatPercent } from "./format.js"
 import { fillTemplate } from "./text.js"
 
 export function bundleSavingsBs() {
@@ -13,7 +13,7 @@ function priceTokens() {
     savings: formatBs(bundleSavingsBs()),
   }
   PACKS.forEach((pack) => {
-    tokens[pack.id] = formatBs(pack.priceBs)
+    tokens[pack.id] = formatBsRange(pack.priceBs, pack.priceMaxBs)
   })
   return tokens
 }

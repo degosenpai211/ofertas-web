@@ -1,4 +1,4 @@
-import { BS_LABEL, formatBs, formatDays, formatNumber, formatPricePair, formatUsd, toUsd } from "../core/format.js"
+import { BS_LABEL, formatBs, formatDays, formatNumber, formatPricePair, formatUsd, formatUsdRange, toUsd } from "../core/format.js"
 import { dict, fillTemplate } from "../core/text.js"
 import { arrowIcon } from "./icons.js"
 
@@ -40,12 +40,19 @@ export function bindScreenshotFallbacks() {
   })
 }
 
-export function renderCountedBs(amountBs) {
-  return `<span class="count-value" data-count="${amountBs}">${formatNumber(amountBs)}</span> ${BS_LABEL}`
+function renderCountedNumber(amountBs) {
+  return `<span class="count-value" data-count="${amountBs}">${formatNumber(amountBs)}</span>`
+}
+
+export function renderCountedBs(amountBs, maxBs) {
+  const range = maxBs ? `${renderCountedNumber(amountBs)}–${renderCountedNumber(maxBs)}` : renderCountedNumber(amountBs)
+  return `${range} ${BS_LABEL}`
 }
 
 export function renderUsdAndDays(pack) {
-  return `${formatUsd(toUsd(pack.priceBs))} · ${formatDays(pack.days, dict().daysUnit)}`
+  const t = dict()
+  const negotiable = pack.priceMaxBs ? ` · ${t.negotiablePrice}` : ""
+  return `${formatUsdRange(pack.priceBs, pack.priceMaxBs)} · ${formatDays(pack.days, t.daysUnit)}${negotiable}`
 }
 
 export function renderOldPrice(amountBs) {
